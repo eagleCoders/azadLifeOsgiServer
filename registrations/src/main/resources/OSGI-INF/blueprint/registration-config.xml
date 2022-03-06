@@ -1,0 +1,94 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprintcm/v1.1.0"
+	xmlns:camel="http://camel.apache.org/schema/blueprint"
+	xmlns:jaxws="http://cxf.apache.org/blueprint/jaxws"
+	xmlns:cxf="http://cxf.apache.org/blueprint/core"
+	xmlns:camelcxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:http="http://cxf.apache.org/transports/http/configuration"
+	xmlns:httpj="http://cxf.apache.org/transports/http-jetty/configuration"
+	xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+	xmlns:osgi="http://camel.apache.org/schema/osgi"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+	 http://cxf.apache.org/blueprint/jaxws http://cxf.apache.org/schemas/blueprint/jaxws.xsd
+	 http://www.springframework.org/schema/osgi-compendium
+       http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium-1.2.xsd
+       http://www.springframework.org/schema/osgi
+       http://www.springframework.org/schema/osgi/spring-osgi.xsd
+       http://camel.apache.org/schema/osgi
+       http://camel.apache.org/schema/osgi/camel-osgi.xsd
+	 http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+<!-- 	
+	<bean id="activemq"
+		class="org.apache.camel.component.activemq.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+
+	ActiveMQ Connection Factory
+	<bean id="jmsConnectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://0.0.0.0:61616" />
+		<property name="userName" value="admin" />
+		<property name="password" value="admin" />
+		<property name="exclusiveConsumer" value="true" />
+	</bean>
+
+	ActiveMQ Pooled Connection Factory
+	<bean id="pooledConnectionFactory"
+		class="org.apache.activemq.pool.PooledConnectionFactory"
+		init-method="start" destroy-method="stop">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="maxConnections" value="10" />
+		<property name="expiryTimeout" value="-1" />
+		<property name="idleTimeout" value="-1" />
+	</bean>
+
+	ActiveMQ JMS Configuration
+	<bean id="jmsConfig"
+		class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory"
+			ref="pooledConnectionFactory" />
+		<property name="concurrentConsumers" value="50" />
+	</bean>
+
+
+	<bean id="securityProcessor"
+		class="registration.kys.beans.SecurityKeyGenProcessor"></bean>
+
+	<bean id="validatingRegistraionProcessor"
+		class="registration.kys.beans.CheckingRegisteredProcessor"></bean>
+
+	<bean id="registrationRouteBuilder"
+		class="registration.kys.beans.routes.RegistrationRouteBuilder">
+		<property name="activemq" ref="activemq"></property>
+	</bean>
+
+ -->
+ 
+ 	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="url"
+			value="jdbc:postgresql://localhost:5432/testingDB" />
+		<property name="username"
+			value="postgres" />
+		<property name="password"
+			value="madho1431" />
+	</bean>
+
+<!-- 	<camelContext
+		xmlns="http://camel.apache.org/schema/blueprint" id="sys_securityCxt">
+		<camel:routeBuilder ref="registrationRouteBuilder" />
+
+		<camel:route id="direct_publishBC">
+			<camel:from uri="direct:publishBC"></camel:from>
+			<camel:log loggingLevel="INFO"
+				message="Message Delivery ActiveMQ System with Body ${body}" />
+			<camel:toD uri="activemq:queue:preRegistration"></camel:toD>
+			<camel:toD uri="activemq:queue:preRegistration"></camel:toD>
+		</camel:route>
+
+	</camelContext>
+	 -->
+	
+</blueprint>
