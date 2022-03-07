@@ -30,9 +30,9 @@ public class BaseRoutes extends RouteBuilder {
 		
 		restConfiguration().component("jetty").host("0.0.0.0").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
 		
-		rest("/kys").get("/hello").to("direct:hello").post("/reqRegistration").to("direct-vm:proceedRequestForRegistration");		
+		rest("/kys").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration");		
 		
-		from("direct:hello").transform().constant("Hello World").setBody(constant("select * from testingtable")).to("jdbc:azadDS").process(new Processor() {
+		from("direct:hello").transform().constant("Hello World").setBody(constant("select * from testingtable")).to("jdbc:azadPDS").process(new Processor() {
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {

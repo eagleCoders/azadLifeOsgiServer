@@ -5,7 +5,8 @@ package registrations;
 
 import java.util.ArrayList;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.PersistenceProvider;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.core.osgi.OsgiClassResolver;
@@ -16,6 +17,7 @@ import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -35,18 +37,25 @@ public class CamelComponent {
 	private ModelCamelContext camelContext;
 	private ServiceRegistration<CamelContext> serviceRegistration;
 
+	private EntityManagerFactory emf;
 	@Activate
 	public void activate(ComponentContext componentContext) throws Exception {
 
 //		SimpleRegistry registry = new SimpleRegistry();
 		BasicDataSource dataSource = new BasicDataSource();
 		
+		
+//		EntityManagerFactory emf = 
+//				new HibernatePersistenceProvider().createEntityManagerFactory("azadPayment_unit", Collections.EMPTY_MAP);
+//Persistence.createEntityManagerFactory("azadPayment_unit");
+
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("madho1431");
 
 //		registry.bind("azadDS", dataSource);
+		
 
 		BundleContext bundleContext = componentContext.getBundleContext();
 		OsgiDefaultCamelContext osgiDefaultCamelContext = new OsgiDefaultCamelContext(bundleContext);
@@ -55,9 +64,18 @@ public class CamelComponent {
 		osgiDefaultCamelContext.setLanguageResolver(new OsgiLanguageResolver(bundleContext));
 		osgiDefaultCamelContext.setName("azzad-payments");
 
+		ServiceReference serviceReference =bundleContext.getServiceReference(
+                PersistenceProvider.class.getName());
+		
+		PersistenceProvider persistenceProvider = ( PersistenceProvider ) bundleContext.getService(serviceReference);
+		
+		emf = persistenceProvider.createEntityManagerFactory(
+                "azadPayment_unit",
+                null
+            );
 
 		camelContext = osgiDefaultCamelContext;
-		camelContext.getRegistry().bind("azadDS", dataSource);
+		camelContext.getRegistry().bind("azadPDS", dataSource);
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 		camelContext.addRoutes(new BaseRoutes());
