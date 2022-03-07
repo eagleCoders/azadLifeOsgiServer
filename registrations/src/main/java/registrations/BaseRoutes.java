@@ -4,6 +4,7 @@
 package registrations;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
@@ -27,16 +28,19 @@ public class BaseRoutes extends RouteBuilder {
 		gsonDataFormat.setUnmarshalType(Map.class);
 
 		
-		restConfiguration().component("jetty").host("localhost").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
+		restConfiguration().component("jetty").host("0.0.0.0").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
 		
-		rest("/kys").get("/hello").to("direct:hello");		
+		rest("/kys").get("/hello").to("direct:hello").post("/reqRegistration").to("direct-vm:proceedRequestForRegistration");		
 		
-		from("direct:hello").transform().constant("Hello World").process(new Processor() {
+		from("direct:hello").transform().constant("Hello World").setBody(constant("select * from testingtable")).to("jdbc:azadDS").process(new Processor() {
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {
 				// TODO Auto-generated method stub
-				System.out.println("Going to test rest get");
+				Object obj = exchange.getIn().getBody();
+				List resultBody = (List) obj;
+
+				System.out.println("Going to test rest get : list of result size : "+resultBody.size());
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("msg", "Hello World");
 				exchange.getIn().setBody(map);

@@ -5,14 +5,16 @@ package registrations;
 
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.core.osgi.OsgiClassResolver;
 import org.apache.camel.core.osgi.OsgiDataFormatResolver;
 import org.apache.camel.core.osgi.OsgiDefaultCamelContext;
 import org.apache.camel.core.osgi.OsgiLanguageResolver;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
@@ -37,10 +39,12 @@ public class CamelComponent {
 	public void activate(ComponentContext componentContext) throws Exception {
 
 //		SimpleRegistry registry = new SimpleRegistry();
-//		BasicDataSource dataSource = new BasicDataSource();
-//		dataSource.setUrl("jdbc:postgresql://localhost:5432/testingDB");
-//		dataSource.setUsername("postgres");
-//		dataSource.setPassword("madho1431");
+		BasicDataSource dataSource = new BasicDataSource();
+		
+		dataSource.setDriverClassName("org.postgresql.Driver");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
+		dataSource.setUsername("postgres");
+		dataSource.setPassword("madho1431");
 
 //		registry.bind("azadDS", dataSource);
 
@@ -49,11 +53,11 @@ public class CamelComponent {
 		osgiDefaultCamelContext.setClassResolver(new OsgiClassResolver(camelContext, bundleContext));
 		osgiDefaultCamelContext.setDataFormatResolver(new OsgiDataFormatResolver(bundleContext));
 		osgiDefaultCamelContext.setLanguageResolver(new OsgiLanguageResolver(bundleContext));
-		osgiDefaultCamelContext.setName("context-example");
+		osgiDefaultCamelContext.setName("azzad-payments");
 
-//		osgiDefaultCamelContext.getCamelContextReference().getRegistry().bind("azadDS", dataSource);
 
 		camelContext = osgiDefaultCamelContext;
+		camelContext.getRegistry().bind("azadDS", dataSource);
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 		camelContext.addRoutes(new BaseRoutes());
