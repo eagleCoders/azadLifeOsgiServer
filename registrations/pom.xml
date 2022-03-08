@@ -84,6 +84,9 @@
 						<!-- <Bundle-Activator>mi.mimos.mooc.esb.MoocActivator</Bundle-Activator> -->
 						<DynamicImport-Package>*</DynamicImport-Package>
 						<Import-Package>org.apache.commons.dbcp2;resolution:=optional,
+						java.security.Provider;resolution:=optional,
+						java.security.Security;resolution:=optional,
+						org.bouncycastle.jce.provider;resolution:=optional,
 							*</Import-Package>
 						<!-- <Require-Capability>osgi.extender; osgi.extender="aries.jpa",
 							osgi.service; effective:=active;

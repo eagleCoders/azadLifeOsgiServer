@@ -3,6 +3,8 @@
  */
 package registrations;
 
+import java.security.Provider;
+import java.security.Security;
 import java.util.ArrayList;
 
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +19,7 @@ import org.apache.camel.core.osgi.OsgiLanguageResolver;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
@@ -29,6 +32,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
+
+import registrations.routes.RegistrationProcessRoutes;
 
 //import org.apache.commons.dbcp.*
 
@@ -47,6 +52,14 @@ public class CamelComponent {
 	@Activate
 	public void activate(ComponentContext componentContext) throws Exception {
 
+		Provider provider = new BouncyCastleProvider();
+		Security.setProperty("crypto.policy", "unlimited");
+		
+		int maxKeySize = javax.crypto.Cipher.getMaxAllowedKeyLength("AES");
+		System.out.println("Max Key Size for AES : " + maxKeySize);
+
+		Security.addProvider(provider);
+		
 //		SimpleRegistry registry = new SimpleRegistry();
 		BasicDataSource dataSource = new BasicDataSource();
 		
@@ -57,11 +70,12 @@ public class CamelComponent {
 
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
-		dataSource.setUsername("ubuntu");
-		dataSource.setPassword("asanlife_#");
+//		dataSource.setUsername("ubuntu");
+//		dataSource.setPassword("asanlife_#");
 
-//		registry.bind("azadDS", dataSource);
-		
+		dataSource.setUsername("postgres");
+		dataSource.setPassword("madho1431");
+
 
 		BundleContext bundleContext = componentContext.getBundleContext();
 		OsgiDefaultCamelContext osgiDefaultCamelContext = new OsgiDefaultCamelContext(bundleContext);
@@ -94,6 +108,7 @@ public class CamelComponent {
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 		camelContext.addRoutes(new BaseRoutes());
+		camelContext.addRoutes(new RegistrationProcessRoutes());
 	}
 
 	@Deactivate

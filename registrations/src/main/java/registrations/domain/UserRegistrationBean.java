@@ -39,10 +39,10 @@ public class UserRegistrationBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name="globalid")
+	@Column(name="globalid", length=10485760)
 	private String globalId;
 	
-	@Column(name="security_id", nullable = false, unique = true	)
+	@Column(name="security_id", nullable = false, unique = true, length=10485760	)
 	private String securityID;
 	
 	@Column(name="email", nullable = false, unique = true)
@@ -51,13 +51,13 @@ public class UserRegistrationBean implements Serializable{
 	@Column(name="cellPhone", nullable = false, unique = true)
 	private String phoneNumber;
 	
-	@Column(name="publicKey")
+	@Column(name="publicKey", length=10485760)
 	private String publicKey;
 	
-	@Column(name="privatekey")
+	@Column(name="privatekey", length=10485760)
 	private String privateKey;
 	
-	@Column(name="certificate")
+	@Column(name="certificate", length=10485760)
 	private String certificate;
 
 	@Column(name="user_name")
