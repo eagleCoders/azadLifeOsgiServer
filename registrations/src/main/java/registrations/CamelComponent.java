@@ -57,8 +57,8 @@ public class CamelComponent {
 
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
-		dataSource.setUsername("postgres");
-		dataSource.setPassword("madho1431");
+		dataSource.setUsername("ubuntu");
+		dataSource.setPassword("asanlife_#");
 
 //		registry.bind("azadDS", dataSource);
 		
