@@ -38,10 +38,18 @@ public class UserRegistrationBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Column(name="security_id")
 	@Id
+	@Column(name="globalid")
+	private String globalId;
+	
+	@Column(name="security_id", nullable = false, unique = true	)
 	private String securityID;
+	
+	@Column(name="email", nullable = false, unique = true)
+	private String email;
+
+	@Column(name="cellPhone", nullable = false, unique = true)
+	private String phoneNumber;
 	
 	@Column(name="publicKey")
 	private String publicKey;
@@ -49,9 +57,9 @@ public class UserRegistrationBean implements Serializable{
 	@Column(name="privatekey")
 	private String privateKey;
 	
-	@Column(name="globalid")
-	private String globalId;
-	
+	@Column(name="certificate")
+	private String certificate;
+
 	@Column(name="user_name")
 	private String userName;
 	
@@ -70,8 +78,13 @@ public class UserRegistrationBean implements Serializable{
 	@Column(name="creationDt")
 	private Date creationDate;
 	
-	@Column(name="email")
-	private String email;
+	@Column(name="updatedBy")
+	private String updatedBy;
+	
+	@Column(name="updationDt")
+	private Date updationDate;
+	
+	
 	
 	
 }

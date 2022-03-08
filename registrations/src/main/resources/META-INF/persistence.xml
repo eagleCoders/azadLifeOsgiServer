@@ -26,10 +26,10 @@
 				value="jdbc:postgresql://127.0.0.1/azadPayments" />
 
 			<property name="javax.persistence.jdbc.user"
-				value="postgres" />
+				value="ubuntu" />
 
 			<property name="javax.persistence.jdbc.password"
-				value="madho1431" />
+				value="asanlife_#" />
 
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.PostgreSQLDialect" />

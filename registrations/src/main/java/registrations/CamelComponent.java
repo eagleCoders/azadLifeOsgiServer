@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.jpa.JpaComponent;
 import org.apache.camel.core.osgi.OsgiClassResolver;
 import org.apache.camel.core.osgi.OsgiDataFormatResolver;
 import org.apache.camel.core.osgi.OsgiDefaultCamelContext;
@@ -23,6 +24,11 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
 
 //import org.apache.commons.dbcp.*
 
@@ -74,8 +80,17 @@ public class CamelComponent {
                 null
             );
 
+		JpaComponent jpaComponent = new JpaComponent();
+		jpaComponent.setEntityManagerFactory(emf);
+		jpaComponent.setJoinTransaction(true);
+		JpaTransactionManager jpaTranx = new JpaTransactionManager();
+		jpaTranx.setEntityManagerFactory(emf);
+		jpaComponent.setTransactionManager(jpaTranx);
 		camelContext = osgiDefaultCamelContext;
 		camelContext.getRegistry().bind("azadPDS", dataSource);
+		camelContext.getRegistry().bind("jpa", jpaComponent);
+//		========== Adding JpaComponent to the Registry ==========
+		
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 		camelContext.addRoutes(new BaseRoutes());
