@@ -15,6 +15,7 @@ import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 
+import registrations.domain.UserRegistrationBean;
 import registrations.security.utils.EncryptDecryptUtils;
 import registrations.security.utils.RSAKeyGenUtils;
 
@@ -37,6 +38,7 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		String status =(String) bodyMap.get("status");
 		String globalID = (String) bodyMap.get("globalId");
 		String email = (String) bodyMap.get("emailAddress");
+		String cellphone=(String) bodyMap.get("cellphone");
 		System.out.println(" the Global ID is : " + globalID);
 
 		
@@ -58,18 +60,21 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 
 		LocalDate localDate = LocalDate.now();
 		
+		UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
+		
 		Map<String, Object> map= bodyMap.entrySet().stream().filter(e-> e.getValue() != null).collect(Collectors.toMap(e-> e.getKey(), e-> e.getValue()));
 		System.out.println(" the Body for Return Back : "+map);
 		map.put("globalId", encryptedGlobalID);
 		StringBuilder insertStatement = new StringBuilder();
 		insertStatement.append(
-				"insert into user_registration (security_id, publickey, privatekey, globalid, user_name, user_password, user_role, status, createdby, creationdt, email)");
+				"insert into user_registration (security_id, publickey, privatekey, globalid, cellphone, user_name, user_password, user_role, status, createdby, creationdt, email)");
 		insertStatement.append(" ");
 		insertStatement.append("VALUES (");
 		insertStatement.append("'" + cnic + "',");
 		insertStatement.append("'" + publicKey + "',");
 		insertStatement.append("'" + privateKey + "',");
 		insertStatement.append("'" + encryptedGlobalID + "',");
+		insertStatement.append("'" + cellphone + "',");
 		insertStatement.append("'" + username + "',");
 		insertStatement.append("'" + password + "',");
 		insertStatement.append("'" + userRoles + "',");

@@ -9,11 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.gson.GsonDataFormat;
 
-import registrations.domain.UserRegistrationBean;
+import registrations.domain.UserTypeChangeBean;
+import registrations.security.SecurityKeyGenGlobalProcessor;
 import registrations.security.SecurityKeyGenProcessor;
 import registrations.security.utils.EncryptDecryptUtils;
 
@@ -21,43 +25,48 @@ import registrations.security.utils.EncryptDecryptUtils;
  * @author anees-ur-rehman
  *
  */
-public class RegistrationProcessRoutes extends RouteBuilder{
+public class RegistrationProcessRoutes extends RouteBuilder {
+
+	private GsonDataFormat gsonDataFormat;
 
 	@Override
 	public void configure() throws Exception {
-		
+
+		gsonDataFormat = new GsonDataFormat();
+		gsonDataFormat.setUnmarshalType(Map.class);
+
 //		=============== Admin Registration Route(One time when started and No Admin user setup by the server) ======================
-				from("timer:stream?repeatCount=1").routeId("timer_startupAdminConfiguration")
-						.log("Planning for base setup base super admin")
-						.setBody(constant("select globalid from user_registration where user_name = 'super@admin'"))
-						.to("jdbc:azadPDS").log("Result from Body ${body}").process(new Processor() {
+		from("timer:stream?repeatCount=1").routeId("timer_startupAdminConfiguration")
+				.log("Planning for base setup base super admin")
+				.setBody(constant("select globalid from user_registration where user_name = 'super@admin'"))
+				.to("jdbc:azadPDS").log("Result from Body ${body}").process(new Processor() {
 
-							@Override
-							public void process(Exchange exchange) throws Exception {
-								Object obj = exchange.getIn().getBody();
-								List resultBody = (List) obj;
+					@Override
+					public void process(Exchange exchange) throws Exception {
+						Object obj = exchange.getIn().getBody();
+						List resultBody = (List) obj;
 
-								Map<String, Object> map = new HashMap<>();
-								if (resultBody.isEmpty()) {
-									map.put("admin_user_status", false);
-								} else {
-									map.put("admin_user_status", true);
-								}
+						Map<String, Object> map = new HashMap<>();
+						if (resultBody.isEmpty()) {
+							map.put("admin_user_status", false);
+						} else {
+							map.put("admin_user_status", true);
+						}
 
-								exchange.getIn().setHeaders(map);
-							}
-						}).log("User registertion validation : ${header.admin_user_status}").choice()
-						.when(header("admin_user_status").isEqualTo(false)).to("direct:createAdminUser")
-						.when(header("admin_user_status").isEqualTo(true)).log("Base Admin Configuration is already done")
-						.process(new Processor() {
+						exchange.getIn().setHeaders(map);
+					}
+				}).log("User registertion validation : ${header.admin_user_status}").choice()
+				.when(header("admin_user_status").isEqualTo(false)).to("direct:createAdminUser")
+				.when(header("admin_user_status").isEqualTo(true)).log("Base Admin Configuration is already done")
+				.process(new Processor() {
 
-							@Override
-							public void process(Exchange exchange) throws Exception {
-								System.out.println("[MainRoute]: The Admin User is already created");
-							}
-						});
-		
-				from("direct:createAdminUser").routeId("direct_createAdminUser").log("Start creating Admin Super User")
+					@Override
+					public void process(Exchange exchange) throws Exception {
+						System.out.println("[MainRoute]: The Admin User is already created");
+					}
+				});
+
+		from("direct:createAdminUser").routeId("direct_createAdminUser").log("Start creating Admin Super User")
 				.process(new Processor() {
 
 					@Override
@@ -123,8 +132,52 @@ public class RegistrationProcessRoutes extends RouteBuilder{
 						exchange.getIn().setBody(insertStatement.toString());
 					}
 				}).to("jdbc:azadPDS");
-		from("direct-vm:proceedRegistration").routeId("direct-vm_proceedRegistration").log("Welcome to the Registration Process");
-		
+
+//		=================== Registration for Every User before adding themselves as Merchandiser or Customer ======================
+		from("direct-vm:proceedRegistration").routeId("direct-vm_proceedRegistration")
+				.log("Welcome to the Registration Process").process(new GuestUserCreationProcessor())
+				.process(new SecurityKeyGenGlobalProcessor()).to("jdbc:azadPDS").process(new Processor() {
+
+					@Override
+					public void process(Exchange exchange) throws Exception {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+//		=================== Registered Users updation according to the usage e.g. Merchandiser, Retailer, and Consumer ============
+		from("direct-vm:updateMerchandiser").routeId("direct-vm_updateMerchandiser")
+				.log("Welcome to the Merchandiser update route")
+//				.unmarshal(gsonDataFormat)
+				.process(new Processor() {
+
+					@Override
+					public void process(Exchange exchange) throws Exception {
+//						Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
+//						String globalId = bodyMap.get("globalid");
+//						String userTypeSelected = bodyMap.get("user_type_selected");
+//						String userTypeLevel = bodyMap.get("user_type_level");
+						String globalId = "12321312312231fff132dfdafffdssdfasfsf";
+//						exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bodyMap);
+						exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
+						StringBuilder selectStatement = new StringBuilder();
+						UserTypeChangeBean bean = new UserTypeChangeBean();
+						bean.setGlobalId(globalId);
+
+						exchange.getIn().setBody(bean);
+					}
+				})
+//				.outputType(UserTypeChangeBean.class)
+				.transacted()
+				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="+UserTypeChangeBean.class.getName()+"&query=select b from "
+						+ UserTypeChangeBean.class.getName() + " b").process(new Processor() {
+							
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								// TODO Auto-generated method stub
+								System.out.println("The incoming Types are : "+exchange.getIn().getBody());
+							}
+						});
 	}
 
 }

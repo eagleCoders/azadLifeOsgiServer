@@ -18,6 +18,7 @@ import org.apache.camel.core.osgi.OsgiDefaultCamelContext;
 import org.apache.camel.core.osgi.OsgiLanguageResolver;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleContext;
@@ -28,10 +29,10 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.TransactionStatus;
+//import org.springframework.transaction.PlatformTransactionManager;
+//import org.springframework.transaction.TransactionDefinition;
+//import org.springframework.transaction.TransactionException;
+//import org.springframework.transaction.TransactionStatus;
 
 import registrations.routes.RegistrationProcessRoutes;
 
@@ -49,6 +50,8 @@ public class CamelComponent {
 	private ServiceRegistration<CamelContext> serviceRegistration;
 
 	private EntityManagerFactory emf;
+	
+	
 	@Activate
 	public void activate(ComponentContext componentContext) throws Exception {
 
@@ -60,7 +63,6 @@ public class CamelComponent {
 
 		Security.addProvider(provider);
 		
-//		SimpleRegistry registry = new SimpleRegistry();
 		BasicDataSource dataSource = new BasicDataSource();
 		
 		
@@ -100,9 +102,17 @@ public class CamelComponent {
 		JpaTransactionManager jpaTranx = new JpaTransactionManager();
 		jpaTranx.setEntityManagerFactory(emf);
 		jpaComponent.setTransactionManager(jpaTranx);
+		
+		SpringTransactionPolicy policy = new SpringTransactionPolicy ();
+		policy.setTransactionManager(jpaTranx);
+		policy.setPropagationBehaviorName("PROPAGATIO‌​N_REQUIRES_NEW");
+//	    policy = policy.setTransactionManager(jpaTranx);
+//	    policy.setPropagationBehav‌​iourName("PROPAGATIO‌​N_REQUIRES_NEW");
+		
 		camelContext = osgiDefaultCamelContext;
 		camelContext.getRegistry().bind("azadPDS", dataSource);
 		camelContext.getRegistry().bind("jpa", jpaComponent);
+//		camelContext.getRegistry().bind("PROPAGATION_REQUIRES_NEW", policy);
 //		========== Adding JpaComponent to the Registry ==========
 		
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);

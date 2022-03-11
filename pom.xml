@@ -138,6 +138,13 @@
 				<configuration>
 					<source>17</source>
 					<target>17</target>
+					<annotationProcessorPaths combine.children="append">
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.22</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 
