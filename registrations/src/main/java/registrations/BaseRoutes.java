@@ -32,10 +32,10 @@ public class BaseRoutes extends RouteBuilder {
 		
 		rest("/kys").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration")
 		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")
-//		.post("/updateRetailer").to("direct-vm:updateRetailer")
-//		.post("/updateAsAgent").to("direct-vm:updateAgent")
-//		.post("/updateAsConsumer").to("direct-vm:updateConsumer")
-//		.post("/loggedIn").to("direct-vm:loggedIn")
+		.post("/updateRetailer").to("direct-vm:updateRetailer")
+		.post("/updateAsAgent").to("direct-vm:updateAgent")
+		.post("/updateAsConsumer").to("direct-vm:updateConsumer")
+		.post("/loggedIn").to("direct-vm:loggedIn")
 		;		
 		
 		from("direct:hello").transform().constant("Hello World").setBody(constant("select * from testingtable")).to("jdbc:azadPDS").process(new Processor() {
