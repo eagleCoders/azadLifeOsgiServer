@@ -25,7 +25,6 @@ import registrations.domain.types.UserType;
  */
 @Entity
 @Table(name = "user_types")
-@SequenceGenerator(name="ap_userTypeSeq", sequenceName="ap_userTypeSeq")
 @NoArgsConstructor
 @Data
 public class UserTypeChangeBean implements Serializable {
@@ -36,8 +35,9 @@ public class UserTypeChangeBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(generator="ap_userTypeSeq", strategy=GenerationType.IDENTITY)
-	@Column(name="user_typeid")
+	@GeneratedValue(generator="azadPaymentuserTypeSeq", strategy=GenerationType.AUTO)
+	@SequenceGenerator(name="azadPaymentuserTypeSeq", sequenceName="ap_userTypeSeq")
+	@Column(name="user_typeid", updatable = false, nullable =  false)
 	private Integer userTypeid;
 	
 	@Column(name="globalId", length=10485760)

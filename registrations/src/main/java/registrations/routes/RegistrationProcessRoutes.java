@@ -17,6 +17,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
 
 import registrations.domain.UserTypeChangeBean;
+import registrations.domain.types.UserType;
 import registrations.security.SecurityKeyGenGlobalProcessor;
 import registrations.security.SecurityKeyGenProcessor;
 import registrations.security.utils.EncryptDecryptUtils;
@@ -154,27 +155,30 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 					@Override
 					public void process(Exchange exchange) throws Exception {
 //						Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
-//						String globalId = bodyMap.get("globalid");
-//						String userTypeSelected = bodyMap.get("user_type_selected");
-//						String userTypeLevel = bodyMap.get("user_type_level");
-						String globalId = "12321312312231fff132dfdafffdssdfasfsf";
-//						exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bodyMap);
+						Map<String, String> bodyMap  = new HashMap<String, String>();
+						String globalId =(bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "LMNOPQ1234";
+						UserType userTypeSelected = (bodyMap.containsKey("user_type_level")) ? UserType.valueOf( bodyMap.get("user_type_level")): UserType.MERCHANDISER;
+						Integer userTypeLevel = (bodyMap.containsKey("user_type_level")) ? Integer.valueOf(bodyMap.get("user_type_level")): 0;
+						exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bodyMap);
 						exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
-						StringBuilder selectStatement = new StringBuilder();
 						UserTypeChangeBean bean = new UserTypeChangeBean();
 						bean.setGlobalId(globalId);
-
+						bean.setUserType(userTypeSelected);
+						bean.setUserTypeLevel(userTypeLevel);
 						exchange.getIn().setBody(bean);
 					}
 				})
 //				.outputType(UserTypeChangeBean.class)
 				.transacted()
-				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="+UserTypeChangeBean.class.getName()+"&query=select b from "
-						+ UserTypeChangeBean.class.getName() + " b").process(new Processor() {
+				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?usePersist=true")
+
+//				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="+UserTypeChangeBean.class.getName()+"&query=select b from "
+//						+ UserTypeChangeBean.class.getName() + " b where b.userTypeid = '{header.AZADPAY_GLOBALID}'")
+				.process(new Processor() {
 							
 							@Override
 							public void process(Exchange exchange) throws Exception {
-								// TODO Auto-generated method stub
+//								List<UserTypeChangeBean> listMap = (List<UserTypeChangeBean>) exchange.getIn().getBody();
 								System.out.println("The incoming Types are : "+exchange.getIn().getBody());
 							}
 						});
