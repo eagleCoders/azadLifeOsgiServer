@@ -148,88 +148,89 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 
 //		=================== Registered Users updation according to the usage e.g. Merchandiser, Retailer, and Consumer ============
 
-		from("direct-vm:updateConsumer").routeId("direct-vm:updateConsumer").log("Welcome to the Consumer Update Route")
-		.unmarshal(gsonDataFormat)
-		.process(new Processor() {
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
-				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "consumer01";
-				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
-						? UserType.valueOf(bodyMap.get("user_type_level"))
-						: UserType.AGENT;
-				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
-						? Integer.valueOf(bodyMap.get("user_type_level"))
-						: 0;
-				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
-
-				UserTypeChangeBean bean = new UserTypeChangeBean();
-				bean.setGlobalId(globalId);
-				bean.setUserType(userTypeSelected);
-				bean.setUserTypeLevel(userTypeLevel);
-				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
-				exchange.getIn().setBody(bean);
-				
-			}
-		}).to("direct:userTypeSelectionQuery");
+//		from("direct-vm:updateConsumer").routeId("direct-vm:updateConsumer").log("Welcome to the Consumer Update Route")
+//		.unmarshal(gsonDataFormat)
+//		.process(new Processor() {
+//			
+//			@Override
+//			public void process(Exchange exchange) throws Exception {
+//				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
+//				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "consumer01";
+//				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
+//						? UserType.valueOf(bodyMap.get("user_type_level"))
+//						: UserType.AGENT;
+//				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
+//						? Integer.valueOf(bodyMap.get("user_type_level"))
+//						: 0;
+//				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
+//
+//				UserTypeChangeBean bean = new UserTypeChangeBean();
+//				bean.setGlobalId(globalId);
+//				bean.setUserType(userTypeSelected);
+//				bean.setUserTypeLevel(userTypeLevel);
+//				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
+//				exchange.getIn().setBody(bean);
+//				
+//			}
+//		}).to("direct:userTypeSelectionQuery");
 
 		
-		from("direct-vm:updateAgent").routeId("direct-vm:updateAgent").log("Welcome to the Agent Update Route")
-		.unmarshal(gsonDataFormat)
-		.process(new Processor() {
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
-				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "agent01";
-				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
-						? UserType.valueOf(bodyMap.get("user_type_level"))
-						: UserType.AGENT;
-				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
-						? Integer.valueOf(bodyMap.get("user_type_level"))
-						: 0;
-				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
-
-				UserTypeChangeBean bean = new UserTypeChangeBean();
-				bean.setGlobalId(globalId);
-				bean.setUserType(userTypeSelected);
-				bean.setUserTypeLevel(userTypeLevel);
-				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
-				exchange.getIn().setBody(bean);
-				
-			}
-		}).to("direct:userTypeSelectionQuery");
+//		from("direct-vm:updateAgent").routeId("direct-vm:updateAgent").log("Welcome to the Agent Update Route")
+//		.unmarshal(gsonDataFormat)
+//		.process(new Processor() {
+//			
+//			@Override
+//			public void process(Exchange exchange) throws Exception {
+//				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
+//				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "agent01";
+//				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
+//						? UserType.valueOf(bodyMap.get("user_type_level"))
+//						: UserType.AGENT;
+//				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
+//						? Integer.valueOf(bodyMap.get("user_type_level"))
+//						: 0;
+//				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
+//
+//				UserTypeChangeBean bean = new UserTypeChangeBean();
+//				bean.setGlobalId(globalId);
+//				bean.setUserType(userTypeSelected);
+//				bean.setUserTypeLevel(userTypeLevel);
+//				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
+//				exchange.getIn().setBody(bean);
+//				
+//			}
+//		}).to("direct:userTypeSelectionQuery");
 		
-		from("direct-vm:updateRetailer").routeId("direct-vm:updateRetailer").log("Welcome to the Retailer Update Route")
-		.unmarshal(gsonDataFormat)
-		.process(new Processor() {
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
-				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "abcd999AAA";
-				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
-						? UserType.valueOf(bodyMap.get("user_type_level"))
-						: UserType.RETAILER;
-				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
-						? Integer.valueOf(bodyMap.get("user_type_level"))
-						: 0;
-				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
-
-				UserTypeChangeBean bean = new UserTypeChangeBean();
-				bean.setGlobalId(globalId);
-				bean.setUserType(userTypeSelected);
-				bean.setUserTypeLevel(userTypeLevel);
-				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
-				exchange.getIn().setBody(bean);
-				
-			}
-		}).to("direct:userTypeSelectionQuery");
+//		from("direct-vm:updateRetailer").routeId("direct-vm:updateRetailer").log("Welcome to the Retailer Update Route")
+//		.unmarshal(gsonDataFormat)
+//		.process(new Processor() {
+//			
+//			@Override
+//			public void process(Exchange exchange) throws Exception {
+//				Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
+//				String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "abcd999AAA";
+//				UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
+//						? UserType.valueOf(bodyMap.get("user_type_level"))
+//						: UserType.RETAILER;
+//				Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
+//						? Integer.valueOf(bodyMap.get("user_type_level"))
+//						: 0;
+//				exchange.getIn().setHeader("AZADPAY_GLOBALID", globalId);
+//
+//				UserTypeChangeBean bean = new UserTypeChangeBean();
+//				bean.setGlobalId(globalId);
+//				bean.setUserType(userTypeSelected);
+//				bean.setUserTypeLevel(userTypeLevel);
+//				exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
+//				exchange.getIn().setBody(bean);
+//				
+//			}
+//		})
+//		.to("direct:userTypeSelectionQuery");
 		
-		from("direct-vm:updateMerchandiser").routeId("direct-vm_updateMerchandiser")
+		from("direct-vm:updateUserType").routeId("direct-vm:updateUserType")
 				.log("Welcome to the Merchandiser update route")
-//				.unmarshal(gsonDataFormat)
+				.unmarshal(gsonDataFormat)
 				.process(new Processor() {
 
 					@Override
@@ -239,7 +240,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "abcd999AAAKLM";
 						UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
 								? UserType.valueOf(bodyMap.get("user_type_level"))
-								: UserType.MERCHANDISER;
+								: UserType.GUEST;
 						Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
 								? Integer.valueOf(bodyMap.get("user_type_level"))
 								: 0;
@@ -253,29 +254,6 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						exchange.getIn().setBody(bean);
 					}
 				}).to("direct:userTypeSelectionQuery");
-//				.outputType(UserTypeChangeBean.class)
-//				.transacted()
-//				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="
-//						+ UserTypeChangeBean.class.getName() + "&query=select b from "
-//						+ UserTypeChangeBean.class.getName() + " b where b.globalId = '${header.AZADPAY_GLOBALID}'")
-//				.process(new Processor() {
-//
-//					@Override
-//					public void process(Exchange exchange) throws Exception {
-//						List<UserTypeChangeBean> listMap = (List<UserTypeChangeBean>) exchange.getIn().getBody();
-//						System.out.println("The incoming Types are : " + listMap.size());
-//						if (listMap.size() > 0) {
-//							exchange.getIn().setHeader("AP_USERTYPE_ACTION", "1");
-//							UserTypeChangeBean bean = listMap.get(0);
-//							exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean);
-//						} else {
-//							exchange.getIn().setHeader("AP_USERTYPE_ACTION", "0");
-//
-//						}
-//					}
-//				}).choice().when(header("AP_USERTYPE_ACTION").isEqualTo("0")).to("direct:createUserType")
-//				.when(header("AP_USERTYPE_ACTION").isEqualTo("1")).to("direct:updateUserType").endChoice().end();
-		
 		
 		from("direct:userTypeSelectionQuery").routeId("direct:userTypeSelectionQuery").log("Usertype Selection query")
 		.transacted()

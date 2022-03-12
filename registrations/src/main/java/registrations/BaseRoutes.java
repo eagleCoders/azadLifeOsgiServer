@@ -31,10 +31,12 @@ public class BaseRoutes extends RouteBuilder {
 		restConfiguration().component("jetty").host("0.0.0.0").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
 		
 		rest("/kys").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration")
-		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")
-		.post("/updateRetailer").to("direct-vm:updateRetailer")
-		.post("/updateAsAgent").to("direct-vm:updateAgent")
-		.post("/updateAsConsumer").to("direct-vm:updateConsumer")
+		.post("/updateUserType").to("direct-vm:updateUserType")
+		
+//		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")
+//		.post("/updateRetailer").to("direct-vm:updateRetailer")
+//		.post("/updateAsAgent").to("direct-vm:updateAgent")
+//		.post("/updateAsConsumer").to("direct-vm:updateConsumer")
 		.post("/loggedIn").to("direct-vm:loggedIn")
 		;		
 		

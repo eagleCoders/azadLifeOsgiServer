@@ -8,5 +8,5 @@ package registrations.domain.types;
  *
  */
 public enum UserType {
-	MERCHANDISER, RETAILER, CONSUMER, AGENT
+	MERCHANDISER, RETAILER, CONSUMER, AGENT, GUEST
 }
