@@ -35,7 +35,7 @@ public class UserRegistrationPk implements Serializable {
 	private String securityID;
 
 //	@Id
-	@Column(name="cellPhone", nullable = false, unique = true)
+	@Column(name="cellPhone", nullable = false, unique = true,length=10485760)
 	private String phoneNumber;
 
 	
