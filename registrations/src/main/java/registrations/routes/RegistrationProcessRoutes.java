@@ -3,6 +3,7 @@
  */
 package registrations.routes;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
 
+import registrations.domain.UserRegistrationBean;
 import registrations.domain.UserTypeChangeBean;
 import registrations.domain.types.UserType;
 import registrations.security.SecurityKeyGenGlobalProcessor;
@@ -30,6 +32,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 
 	private GsonDataFormat gsonDataFormat;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void configure() throws Exception {
 
@@ -135,16 +138,31 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 				}).to("jdbc:azadPDS");
 
 //		=================== Registration for Every User before adding themselves as Merchandiser or Customer ======================
+		onException(Exception.class, SQLException.class).process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				// TODO Auto-generated method stub
+				UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
+				userRegistrationBean.setExceptionMsg(exchange.getException().getMessage());
+				exchange.getIn().setBody(userRegistrationBean);
+			}
+		}).unmarshal(gsonDataFormat).convertBodyTo(String.class);
+		
 		from("direct-vm:proceedRegistration").routeId("direct-vm_proceedRegistration")
-				.log("Welcome to the Registration Process").process(new GuestUserCreationProcessor())
+				.log("Welcome to the Registration Process ${body}")
+
+				.process(new GuestUserCreationProcessor())
 				.process(new SecurityKeyGenGlobalProcessor()).to("jdbc:azadPDS").process(new Processor() {
 
 					@Override
 					public void process(Exchange exchange) throws Exception {
 						// TODO Auto-generated method stub
-
+						UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
+						userRegistrationBean.setMessage("Registraion is completed Successully");
+						exchange.getIn().setBody(userRegistrationBean);
 					}
-				});
+				}).unmarshal(gsonDataFormat).convertBodyTo(String.class);
 
 //		=================== Registered Users updation according to the usage e.g. Merchandiser, Retailer, and Consumer ============
 

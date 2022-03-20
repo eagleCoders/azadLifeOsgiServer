@@ -30,7 +30,7 @@ public class BaseRoutes extends RouteBuilder {
 		
 		restConfiguration().component("jetty").host("0.0.0.0").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
 		
-		rest("/kys").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration")
+		rest("/azadLife").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration")
 		.post("/updateUserType").to("direct-vm:updateUserType")
 		
 //		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")

@@ -34,6 +34,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 //import org.springframework.transaction.TransactionException;
 //import org.springframework.transaction.TransactionStatus;
 
+import registrations.routes.AuthenticationProcessor;
 import registrations.routes.RegistrationProcessRoutes;
 
 //import org.apache.commons.dbcp.*
@@ -119,6 +120,7 @@ public class CamelComponent {
 		camelContext.start();
 		camelContext.addRoutes(new BaseRoutes());
 		camelContext.addRoutes(new RegistrationProcessRoutes());
+		camelContext.addRoutes(new AuthenticationProcessor());
 	}
 
 	@Deactivate

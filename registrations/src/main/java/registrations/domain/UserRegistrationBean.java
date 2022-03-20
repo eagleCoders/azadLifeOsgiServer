@@ -12,6 +12,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -84,6 +85,12 @@ public class UserRegistrationBean implements Serializable{
 	
 	@Column(name="updationDt")
 	private Date updationDate;
+	
+	@Transient
+	private String message;
+	
+	@Transient
+	private String exceptionMsg;
 
 	public UserRegistrationPk getUserRegistrationPk() {
 		return userRegistrationPk;
@@ -188,9 +195,22 @@ public class UserRegistrationBean implements Serializable{
 	public void setUpdationDate(Date updationDate) {
 		this.updationDate = updationDate;
 	}
-	
-	
-	
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getExceptionMsg() {
+		return exceptionMsg;
+	}
+
+	public void setExceptionMsg(String exceptionMsg) {
+		this.exceptionMsg = exceptionMsg;
+	}
 	
 	
 }

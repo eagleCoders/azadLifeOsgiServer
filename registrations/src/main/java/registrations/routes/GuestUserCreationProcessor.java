@@ -21,7 +21,8 @@ public class GuestUserCreationProcessor implements Processor{
 		System.out.println("the Body from Map is : " + bodyMap);
 		bodyMap.put("userRoles", "00");
 		bodyMap.put("status", "APPROVED");
-
+		bodyMap.put("securityId", bodyMap.get("userName"));
+		bodyMap.put("cellphone", bodyMap.get("phoneNumber"));
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(bodyMap.get("userName"));
 		stringBuilder.append(".");
