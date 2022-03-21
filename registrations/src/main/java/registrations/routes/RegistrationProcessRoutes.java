@@ -10,14 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
+import org.postgresql.util.PSQLException;
 
-import registrations.domain.UserRegistrationBean;
 import registrations.domain.UserTypeChangeBean;
 import registrations.domain.types.UserType;
 import registrations.security.SecurityKeyGenGlobalProcessor;
@@ -38,6 +36,22 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 
 		gsonDataFormat = new GsonDataFormat();
 		gsonDataFormat.setUnmarshalType(Map.class);
+
+		
+		onException(Exception.class, SQLException.class, PSQLException.class)
+		.handled(true).process(new Processor() {
+
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				// TODO Auto-generated method stub
+				log.info("PSQL Exception caught....");
+				Throwable caused = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("message", "Exception caught");
+				exchange.getIn().setBody(map);
+
+			}
+		}).marshal(gsonDataFormat).convertBodyTo(String.class);
 
 //		=============== Admin Registration Route(One time when started and No Admin user setup by the server) ======================
 		from("timer:stream?repeatCount=1").routeId("timer_startupAdminConfiguration")
@@ -138,31 +152,23 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 				}).to("jdbc:azadPDS");
 
 //		=================== Registration for Every User before adding themselves as Merchandiser or Customer ======================
-		onException(Exception.class, SQLException.class).process(new Processor() {
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				// TODO Auto-generated method stub
-				UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
-				userRegistrationBean.setExceptionMsg(exchange.getException().getMessage());
-				exchange.getIn().setBody(userRegistrationBean);
-			}
-		}).unmarshal(gsonDataFormat).convertBodyTo(String.class);
-		
+
 		from("direct-vm:proceedRegistration").routeId("direct-vm_proceedRegistration")
 				.log("Welcome to the Registration Process ${body}")
 
-				.process(new GuestUserCreationProcessor())
-				.process(new SecurityKeyGenGlobalProcessor()).to("jdbc:azadPDS").process(new Processor() {
+				.process(new GuestUserCreationProcessor()).process(new SecurityKeyGenGlobalProcessor())
+				.to("jdbc:azadPDS").process(new Processor() {
 
 					@Override
 					public void process(Exchange exchange) throws Exception {
 						// TODO Auto-generated method stub
-						UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
-						userRegistrationBean.setMessage("Registraion is completed Successully");
-						exchange.getIn().setBody(userRegistrationBean);
+//						UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
+//						userRegistrationBean.setMessage("Registraion is completed Successully");
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("message", "Registraion is completed Successully");
+						exchange.getIn().setBody(map);
 					}
-				}).unmarshal(gsonDataFormat).convertBodyTo(String.class);
+				}).marshal(gsonDataFormat).convertBodyTo(String.class);
 
 //		=================== Registered Users updation according to the usage e.g. Merchandiser, Retailer, and Consumer ============
 
@@ -192,7 +198,6 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //			}
 //		}).to("direct:userTypeSelectionQuery");
 
-		
 //		from("direct-vm:updateAgent").routeId("direct-vm:updateAgent").log("Welcome to the Agent Update Route")
 //		.unmarshal(gsonDataFormat)
 //		.process(new Processor() {
@@ -218,7 +223,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //				
 //			}
 //		}).to("direct:userTypeSelectionQuery");
-		
+
 //		from("direct-vm:updateRetailer").routeId("direct-vm:updateRetailer").log("Welcome to the Retailer Update Route")
 //		.unmarshal(gsonDataFormat)
 //		.process(new Processor() {
@@ -245,11 +250,9 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //			}
 //		})
 //		.to("direct:userTypeSelectionQuery");
-		
+
 		from("direct-vm:updateUserType").routeId("direct-vm:updateUserType")
-				.log("Welcome to the Merchandiser update route")
-				.unmarshal(gsonDataFormat)
-				.process(new Processor() {
+				.log("Welcome to the Merchandiser update route").unmarshal(gsonDataFormat).process(new Processor() {
 
 					@Override
 					public void process(Exchange exchange) throws Exception {
@@ -272,53 +275,51 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						exchange.getIn().setBody(bean);
 					}
 				}).to("direct:userTypeSelectionQuery");
-		
+
 		from("direct:userTypeSelectionQuery").routeId("direct:userTypeSelectionQuery").log("Usertype Selection query")
-		.transacted()
-		.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="
-				+ UserTypeChangeBean.class.getName() + "&query=select b from "
-				+ UserTypeChangeBean.class.getName() + " b where b.globalId = '${header.AZADPAY_GLOBALID}'")
-		.process(new Processor() {
+				.transacted()
+				.toD("jpa://" + UserTypeChangeBean.class.getName() + "?resultClass="
+						+ UserTypeChangeBean.class.getName() + "&query=select b from "
+						+ UserTypeChangeBean.class.getName() + " b where b.globalId = '${header.AZADPAY_GLOBALID}'")
+				.process(new Processor() {
 
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				List<UserTypeChangeBean> listMap = (List<UserTypeChangeBean>) exchange.getIn().getBody();
-				System.out.println("The incoming Types are : " + listMap.size());
-				if (listMap.size() > 0) {
-					exchange.getIn().setHeader("AP_USERTYPE_ACTION", "1");
-					UserTypeChangeBean bean = listMap.get(0);
-					UserTypeChangeBean bean0 =(UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
-					bean0.setUserTypeid(bean.getUserTypeid());
-					exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean0);
-				} else {
-					exchange.getIn().setHeader("AP_USERTYPE_ACTION", "0");
+					@Override
+					public void process(Exchange exchange) throws Exception {
+						List<UserTypeChangeBean> listMap = (List<UserTypeChangeBean>) exchange.getIn().getBody();
+						System.out.println("The incoming Types are : " + listMap.size());
+						if (listMap.size() > 0) {
+							exchange.getIn().setHeader("AP_USERTYPE_ACTION", "1");
+							UserTypeChangeBean bean = listMap.get(0);
+							UserTypeChangeBean bean0 = (UserTypeChangeBean) exchange.getIn()
+									.getHeader("AZADPAY_MERCHANTTYPE");
+							bean0.setUserTypeid(bean.getUserTypeid());
+							exchange.getIn().setHeader("AZADPAY_MERCHANTTYPE", bean0);
+						} else {
+							exchange.getIn().setHeader("AP_USERTYPE_ACTION", "0");
 
-				}
-			}
-		}).choice().when(header("AP_USERTYPE_ACTION").isEqualTo("0")).to("direct:createUserType")
-		.when(header("AP_USERTYPE_ACTION").isEqualTo("1")).to("direct:updateUserType").endChoice().end();
-		
+						}
+					}
+				}).choice().when(header("AP_USERTYPE_ACTION").isEqualTo("0")).to("direct:createUserType")
+				.when(header("AP_USERTYPE_ACTION").isEqualTo("1")).to("direct:updateUserType").endChoice().end();
+
 		from("direct:createUserType").routeId("direct:createUserType").process(new Processor() {
-			
+
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				UserTypeChangeBean bean =(UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
+				UserTypeChangeBean bean = (UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
 				exchange.getIn().setBody(bean);
 			}
-		}).transacted()
-		.toD("jpa://" + UserTypeChangeBean.class.getName() + "?usePersist=true");
-		
-		
+		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?usePersist=true");
+
 		from("direct:updateUserType").routeId("direct:updateUserType").process(new Processor() {
-			
+
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				UserTypeChangeBean bean =(UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
+				UserTypeChangeBean bean = (UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
 				exchange.getIn().setBody(bean);
 			}
-		}).transacted()
-		.toD("jpa://" + UserTypeChangeBean.class.getName() + "?useExecuteUpdate=true");
-		
+		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?useExecuteUpdate=true");
+
 	}
 
 }

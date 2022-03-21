@@ -32,12 +32,12 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		Message message = exchange.getIn();
 		Map<String, String> bodyMap = (Map<String, String>)message.getBody();
 		String username = (String)bodyMap.get("userName");
-		String password = (String)bodyMap.get("password");
+		String password = (String)bodyMap.get("userPassword");
 		String userRoles = (String)bodyMap.get("userRoles");
 		String cnic = (String) bodyMap.get("securityId");
 		String status =(String) bodyMap.get("status");
 		String globalID = (String) bodyMap.get("globalId");
-		String email = (String) bodyMap.get("emailAddress");
+		String email = (String) bodyMap.get("email");
 		String cellphone=(String) bodyMap.get("cellphone");
 		System.out.println(" the Global ID is : " + globalID);
 

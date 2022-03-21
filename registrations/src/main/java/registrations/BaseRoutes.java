@@ -38,7 +38,8 @@ public class BaseRoutes extends RouteBuilder {
 //		.post("/updateAsAgent").to("direct-vm:updateAgent")
 //		.post("/updateAsConsumer").to("direct-vm:updateConsumer")
 		.post("/loggedIn").to("direct-vm:loggedIn")
-		;		
+		;
+		
 		
 		from("direct:hello").transform().constant("Hello World").setBody(constant("select * from testingtable")).to("jdbc:azadPDS").process(new Processor() {
 			
