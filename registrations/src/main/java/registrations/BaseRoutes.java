@@ -30,7 +30,9 @@ public class BaseRoutes extends RouteBuilder {
 		
 		restConfiguration().component("jetty").host("0.0.0.0").port(9091).bindingMode(RestBindingMode.json).dataFormatProperty("prettyPrint","true");
 		
-		rest("/azadLife").get("/hello").to("direct:hello").post("/registration").to("direct-vm:proceedRegistration")
+		rest("/azadLife").get("/hello").to("direct:hello")
+		.get("/loadAllUsers").to("direct:loadUsers")
+		.post("/registration").to("direct-vm:proceedRegistration")
 		.post("/updateUserType").to("direct-vm:updateUserType")
 		
 //		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")
@@ -56,6 +58,18 @@ public class BaseRoutes extends RouteBuilder {
 				
 			}
 		}).marshal(gsonDataFormat).convertBodyTo(String.class);
+		
+		from("direct:loadUsers").routeId("direct:loadUsers").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				StringBuilder selectStatement = new StringBuilder();
+				selectStatement
+						.append("select user_name, user_password, user_role ,globalid ,email from user_registration");
+
+				exchange.getIn().setBody(selectStatement.toString());				
+			}
+		}).to("jdbc:azadPDS").marshal(gsonDataFormat).convertBodyTo(String.class);;
 		
 //		from("timer:stream?repeatCount=3").routeId("timer_buzzTelegram").process(new Processor() {
 //
