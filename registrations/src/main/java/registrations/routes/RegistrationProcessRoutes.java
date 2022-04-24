@@ -56,7 +56,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //		=============== Admin Registration Route(One time when started and No Admin user setup by the server) ======================
 		from("timer:stream?repeatCount=1").routeId("timer_startupAdminConfiguration")
 				.log("Planning for base setup base super admin")
-				.setBody(constant("select globalid from user_registration where user_name = 'super@admin'"))
+				.setBody(constant("select globalid,user_name from user_registration where user_name = 'super@admin'"))
 				.to("jdbc:azadPDS").log("Result from Body ${body}").process(new Processor() {
 
 					@Override
@@ -81,8 +81,12 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 					@Override
 					public void process(Exchange exchange) throws Exception {
 						System.out.println("[MainRoute]: The Admin User is already created");
+						List resultBody = (List) exchange.getIn().getBody();
+						Map<String, String> mapData =(Map<String, String>) resultBody.get(0);
+						exchange.getIn().setHeader("globalid", mapData.get("globalid"));
+						exchange.getIn().setHeader("userId", mapData.get("user_name"));
 					}
-				});
+				}).wireTap("direct-vm:createTalk2meCreate");
 
 		from("direct:createAdminUser").routeId("direct_createAdminUser").log("Start creating Admin Super User")
 				.process(new Processor() {
@@ -147,9 +151,12 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						insertStatement.append("'" + localDate + "',");
 						insertStatement.append("'info@gamimatricz.com')");
 
+						exchange.getIn().setHeader("globalid", encryptedGlobalID);
+						exchange.getIn().setHeader("userId", cnic);
+
 						exchange.getIn().setBody(insertStatement.toString());
 					}
-				}).to("jdbc:azadPDS");
+				}).to("jdbc:azadPDS").wireTap("direct-vm:createTalk2meCreate");
 
 //		=================== Registration for Every User before adding themselves as Merchandiser or Customer ======================
 

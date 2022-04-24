@@ -20,6 +20,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
@@ -35,6 +36,7 @@ public class TalkToMeComponent {
 	private ModelCamelContext camelContext;
 	private ServiceRegistration<CamelContext> serviceRegistration;
 
+	@Activate
 	public void activate(ComponentContext componentContext) throws Exception {
 		
 		BundleContext bundleContext = componentContext.getBundleContext();
@@ -65,6 +67,7 @@ public class TalkToMeComponent {
 		ActiveMQComponent activeMqComponent = new ActiveMQComponent();
 		activeMqComponent.setConfiguration(jmsConfiguration);
 
+		camelContext = osgiDefaultCamelContext;
 		camelContext.getRegistry().bind("activemq", activeMqComponent);
 
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
