@@ -63,7 +63,7 @@
 							
 						<!-- <Import-Package>*,org.apache.camel.osgi</Import-Package> -->
 				 
-						<Export-Package>infrastructure.codes.domain, infrastructure.core.api, infrastructure.core.data, infrastructure.core.exception</Export-Package>
+						<Export-Package>infrastructure.codes.domain, infrastructure.core.api, infrastructure.core.data, infrastructure.core.exception, infrastructure.core.serialization</Export-Package>
 					 
 					
 					</instructions>

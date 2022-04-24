@@ -60,6 +60,7 @@
 							infrastructure.core.api;resolution:=optional,
 							infrastructure.core.data;resolution:=optional,
 							infrastructure.core.exception;resolution:=optional,
+							infrastructure.core.serialization;resolution:=optional,
 							*</Import-Package>
 						<!-- <Require-Capability>osgi.extender; osgi.extender="aries.jpa", 
 							osgi.service; effective:=active; objectClass="javax.persistence.spi.PersistenceProvider"; 

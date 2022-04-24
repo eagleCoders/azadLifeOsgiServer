@@ -10,7 +10,12 @@ import java.util.ArrayList;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.activemq.ActiveMQComponent;
+import org.apache.camel.component.activemq.ActiveMQConfiguration;
+import org.apache.camel.component.jms.JmsConfiguration;
 import org.apache.camel.component.jpa.JpaComponent;
 import org.apache.camel.core.osgi.OsgiClassResolver;
 import org.apache.camel.core.osgi.OsgiDataFormatResolver;
@@ -110,9 +115,30 @@ public class CamelComponent {
 //	    policy = policy.setTransactionManager(jpaTranx);
 //	    policy.setPropagationBehav‌​iourName("PROPAGATIO‌​N_REQUIRES_NEW");
 		
+//		=========== ActiveMQ Configuration ================
+		ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
+		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
+		activeMQConnectionFactory.setBrokerURL("tcp://0.0.0.0:61616");
+		activeMQConnectionFactory.setUserName("admin");
+		activeMQConnectionFactory.setPassword("admin");
+		activeMQConnectionFactory.setExclusiveConsumer(true);
+		PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory();
+		pooledConnectionFactory.setConnectionFactory(activeMQConnectionFactory);
+		pooledConnectionFactory.setMaxConnections(15);
+		pooledConnectionFactory.setExpiryTimeout(-1);
+		pooledConnectionFactory.setIdleTimeout(-1);
+		
+		JmsConfiguration jmsConfiguration  = new JmsConfiguration();
+		jmsConfiguration.setConnectionFactory(pooledConnectionFactory);
+		jmsConfiguration.setConcurrentConsumers(50);
+		
+		ActiveMQComponent activeMqComponent = new ActiveMQComponent();
+		activeMqComponent.setConfiguration(jmsConfiguration);
+		
 		camelContext = osgiDefaultCamelContext;
 		camelContext.getRegistry().bind("azadPDS", dataSource);
 		camelContext.getRegistry().bind("jpa", jpaComponent);
+		camelContext.getRegistry().bind("activemq", activeMqComponent);
 //		camelContext.getRegistry().bind("PROPAGATION_REQUIRES_NEW", policy);
 //		========== Adding JpaComponent to the Registry ==========
 		

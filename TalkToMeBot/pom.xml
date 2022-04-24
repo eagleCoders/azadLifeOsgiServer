@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.azadlife</groupId>
+    <artifactId>baseserver</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>TalkToMeBot</artifactId>
+  <packaging>bundle</packaging>
+  
+  	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<!-- <version>2.3.7</version> -->
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Include-Resource>src/main/resources</Include-Resource>
+						<Spring-Context>*;publish-context:=false;create-asynchronously:=true</Spring-Context>
+
+<!-- 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+ -->
+						<!-- <Bundle-Activator>mi.mimos.mooc.esb.MoocActivator</Bundle-Activator> -->
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Import-Package>*</Import-Package>
+						<!-- <Require-Capability>osgi.extender; osgi.extender="aries.jpa", 
+							osgi.service; effective:=active; objectClass="javax.persistence.spi.PersistenceProvider"; 
+							javax.persistence.provider="org.hibernate.jpa.HibernatePersistenceProvider", 
+							osgi.extender;</Require-Capability> -->
+
+						<!-- <Import-Package>*,org.apache.camel.osgi</Import-Package> -->
+					<!-- 	
+						<Export-Package></Export-Package>
+					 -->
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
+</project>

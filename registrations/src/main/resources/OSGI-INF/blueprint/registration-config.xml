@@ -19,91 +19,78 @@
        http://camel.apache.org/schema/osgi/camel-osgi.xsd
 	 http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-	<!-- <bean id="activemq" class="org.apache.camel.component.activemq.ActiveMQComponent"> 
-		<property name="configuration" ref="jmsConfig" /> </bean> ActiveMQ Connection 
-		Factory <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"> 
-		<property name="brokerURL" value="tcp://0.0.0.0:61616" /> <property name="userName" 
-		value="admin" /> <property name="password" value="admin" /> <property name="exclusiveConsumer" 
-		value="true" /> </bean> ActiveMQ Pooled Connection Factory <bean id="pooledConnectionFactory" 
-		class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" 
-		destroy-method="stop"> <property name="connectionFactory" ref="jmsConnectionFactory" 
-		/> <property name="maxConnections" value="10" /> <property name="expiryTimeout" 
-		value="-1" /> <property name="idleTimeout" value="-1" /> </bean> ActiveMQ 
-		JMS Configuration <bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration"> 
-		<property name="connectionFactory" ref="pooledConnectionFactory" /> <property 
-		name="concurrentConsumers" value="50" /> </bean> <bean id="securityProcessor" 
-		class="registration.kys.beans.SecurityKeyGenProcessor"></bean> <bean id="validatingRegistraionProcessor" 
-		class="registration.kys.beans.CheckingRegisteredProcessor"></bean> <bean 
-		id="registrationRouteBuilder" class="registration.kys.beans.routes.RegistrationRouteBuilder"> 
-		<property name="activemq" ref="activemq"></property> </bean> -->
-
-<!-- 	<bean id="dataSource"
-		class="org.apache.commons.dbcp2.BasicDataSource">
-		<property name="driverClassName"
-			value="org.postgresql.Driver"></property>
-		<property name="url"
-			value="jdbc:postgresql://127.0.0.1:5432/azadPayments" />
-		<property name="username" value="postgres" />
-		<property name="password" value="madho1431" />
+<!-- 
+	<bean id="activemq"
+		class="org.apache.camel.component.activemq.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+	</bean>
+	ActiveMQ Connection
+	Factory
+	<bean id="jmsConnectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://0.0.0.0:61616" />
+		<property name="userName" value="admin" />
+		<property name="password" value="admin" />
+		<property name="exclusiveConsumer" value="true" />
+	</bean>
+	ActiveMQ Pooled Connection Factory
+	<bean id="pooledConnectionFactory"
+		class="org.apache.activemq.pool.PooledConnectionFactory"
+		init-method="start" destroy-method="stop">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="maxConnections" value="10" />
+		<property name="expiryTimeout" value="-1" />
+		<property name="idleTimeout" value="-1" />
+	</bean>
+	ActiveMQ
+	JMS Configuration
+	<bean id="jmsConfig"
+		class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory"
+			ref="pooledConnectionFactory" />
+		<property name="concurrentConsumers" value="50" />
 	</bean>
 	
-	<service interface="javax.sql.DataSource" ref="dataSource">
-        <service-properties>
-            <entry key="osgi.jndi.service.name" value="jdbc/azadDS"/>
-        </service-properties>
-    </service>
-	 -->
-  <!--   <bean id="jpaTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	<bean id="securityProcessor"
+		class="registration.kys.beans.SecurityKeyGenProcessor"></bean>
+	<bean id="validatingRegistraionProcessor"
+		class="registration.kys.beans.CheckingRegisteredProcessor"></bean>
+	<bean id="registrationRouteBuilder"
+		class="registration.kys.beans.routes.RegistrationRouteBuilder">
+		<property name="activemq" ref="activemq"></property>
 	</bean>
 
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-		<property name="dataSource" ref="postgresDS" />
-		<property name="persistenceUnitName" value="azadPayment_unit" />
-	</bean>
-
-	<bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-		<property name="transactionManager" ref="jpaTxManager" />
-	</bean> -->
-    
-
-<!-- 	<bean
-		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-		id="jpaAdapter">
-		<property name="showSql" value="true" />
-		<property name="generateDdl" value="true" />
-		<property name="databasePlatform"
-			value="org.hibernate.dialect.PostgreSQLDialect" />
-	</bean>
-
-	<bean class="org.apache.camel.component.jpa.JpaComponent" id="jpa">
-		<property name="entityManagerFactory"
-			ref="entityManagerFactory" />
-		<property name="transactionManager" ref="jpaTxManager" />
-	</bean>
-
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
-		id="jpaTxManager">
-		<property name="entityManagerFactory"
-			ref="entityManagerFactory" />
-	</bean>
-	<bean
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		id="entityManagerFactory">
-		<property name="persistenceUnitName" value="azadPayment_unit" />
-		<property name="dataSource" ref="dataSource" />
-		<property name="jpaVendorAdapter" ref="jpaAdapter" />
-	</bean>
-
-	<bean class="org.apache.camel.spring.spi.SpringTransactionPolicy"
-		id="requiredPolicy">
-		<property name="transactionManager" ref="jpaTxManager" />
-		<property name="propagationBehaviorName"
-			value="PROPAGATION_REQUIRED" />
-	</bean>
  -->
+ <!-- <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"> 
+		<property name="driverClassName" value="org.postgresql.Driver"></property> 
+		<property name="url" value="jdbc:postgresql://127.0.0.1:5432/azadPayments" 
+		/> <property name="username" value="postgres" /> <property name="password" 
+		value="madho1431" /> </bean> <service interface="javax.sql.DataSource" ref="dataSource"> 
+		<service-properties> <entry key="osgi.jndi.service.name" value="jdbc/azadDS"/> 
+		</service-properties> </service> -->
+	<!-- <bean id="jpaTxManager" class="org.springframework.orm.jpa.JpaTransactionManager"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> </bean> 
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"> 
+		<property name="dataSource" ref="postgresDS" /> <property name="persistenceUnitName" 
+		value="azadPayment_unit" /> </bean> <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> <property 
+		name="transactionManager" ref="jpaTxManager" /> </bean> -->
+
+
+	<!-- <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" 
+		id="jpaAdapter"> <property name="showSql" value="true" /> <property name="generateDdl" 
+		value="true" /> <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" 
+		/> </bean> <bean class="org.apache.camel.component.jpa.JpaComponent" id="jpa"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> <property 
+		name="transactionManager" ref="jpaTxManager" /> </bean> <bean class="org.springframework.orm.jpa.JpaTransactionManager" 
+		id="jpaTxManager"> <property name="entityManagerFactory" ref="entityManagerFactory" 
+		/> </bean> <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
+		id="entityManagerFactory"> <property name="persistenceUnitName" value="azadPayment_unit" 
+		/> <property name="dataSource" ref="dataSource" /> <property name="jpaVendorAdapter" 
+		ref="jpaAdapter" /> </bean> <bean class="org.apache.camel.spring.spi.SpringTransactionPolicy" 
+		id="requiredPolicy"> <property name="transactionManager" ref="jpaTxManager" 
+		/> <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED" 
+		/> </bean> -->
 	<!-- <camelContext xmlns="http://camel.apache.org/schema/blueprint" id="sys_securityCxt"> 
 		<camel:routeBuilder ref="registrationRouteBuilder" /> <camel:route id="direct_publishBC"> 
 		<camel:from uri="direct:publishBC"></camel:from> <camel:log loggingLevel="INFO" 

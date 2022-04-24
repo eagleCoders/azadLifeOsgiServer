@@ -12,6 +12,7 @@
 		<module>socialmediabots</module>
 		<module>accounts</module>
 		<module>infrastructure</module>
+		<module>TalkToMeBot</module>
 	</modules>
 	
 	<dependencyManagement>
