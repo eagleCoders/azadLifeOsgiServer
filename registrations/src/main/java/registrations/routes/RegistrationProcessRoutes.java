@@ -175,7 +175,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						map.put("message", "Registraion is completed Successully");
 						exchange.getIn().setBody(map);
 					}
-				}).marshal(gsonDataFormat).convertBodyTo(String.class);
+				}).marshal(gsonDataFormat).convertBodyTo(String.class).wireTap("direct-vm:createTalk2meCreate");
 
 //		=================== Registered Users updation according to the usage e.g. Merchandiser, Retailer, and Consumer ============
 

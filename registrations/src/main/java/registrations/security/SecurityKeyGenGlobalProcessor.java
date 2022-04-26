@@ -84,6 +84,9 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		insertStatement.append("'" + email + "')");
 		
 //		exchange.getIn().setHeaders(map);
+		exchange.getIn().setHeader("globalid", encryptedGlobalID);
+		exchange.getIn().setHeader("userId", cnic);
+		
 		exchange.getIn().setHeader("TelegramBotSecureMap", map);
 		
 
