@@ -40,7 +40,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 				destinationBuilder.append(userQueueiD);
 				Map<String, String> messageMap = new HashMap<String, String>();
 				messageMap.put("messaegType", "WELCOME");
-				messageMap.put("messaeg", "WELCOME From the Server");
+				messageMap.put("messaeg", "WELCOME From the Server: You are Registered to communicate");
 				
 				RouteBuilder.addRoutes(getContext(),  rb->{
 					rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
