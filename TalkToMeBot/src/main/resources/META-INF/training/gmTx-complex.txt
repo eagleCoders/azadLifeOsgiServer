@@ -1,0 +1,2 @@
+I want to <intent>buy</intent> <thing>fruits</thing> at <price>price 50 per kg</price>
+<weight>kg or kilogram</weight>

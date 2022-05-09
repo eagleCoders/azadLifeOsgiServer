@@ -62,6 +62,17 @@ public class TalkToMeRoutes extends RouteBuilder{
 				});
 			}
 		});
+		
+		
+		
+		from("direct-vm:updateNLPCommunication").routeId("direct-vm_updateNLPCommunication").log("Welcome to the NLP Chat Route").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 	}
 

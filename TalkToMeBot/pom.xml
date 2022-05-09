@@ -8,6 +8,14 @@
   <artifactId>TalkToMeBot</artifactId>
   <packaging>bundle</packaging>
   
+  <dependencies>
+  		<dependency>
+ 		 	<groupId>org.apache.opennlp</groupId>
+  			<artifactId>opennlp-tools</artifactId>
+  			<version>1.9.4</version>
+		</dependency>
+  </dependencies>
+  
   	<build>
 		<plugins>
 

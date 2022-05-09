@@ -11,12 +11,20 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.activemq.ActiveMQComponent;
 import org.apache.camel.component.activemq.ActiveMQConfiguration;
 import org.apache.camel.component.jms.JmsConfiguration;
+import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.core.osgi.OsgiClassResolver;
 import org.apache.camel.core.osgi.OsgiDataFormatResolver;
 import org.apache.camel.core.osgi.OsgiDefaultCamelContext;
 import org.apache.camel.core.osgi.OsgiLanguageResolver;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
@@ -24,6 +32,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
+import opennlp.tools.doccat.DoccatModel;
+import talktome.nlp.NLPUtils;
 import talktome.routes.TalkToMeRoutes;
 
 /**
@@ -70,9 +80,29 @@ public class TalkToMeComponent {
 		camelContext = osgiDefaultCamelContext;
 		camelContext.getRegistry().bind("activemq", activeMqComponent);
 
+		PropertiesComponent pc = new PropertiesComponent();
+		pc.setLocation("file:${karaf.home}/etc/gmTx-dukkaan.txt"); 
+//		context.addComponent("properties", pc);
+		camelContext.getRegistry().bind("properties", pc);
+
+		CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().withCache("nlpModel",
+				CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, DoccatModel.class,
+						ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES).offheap(1,
+								MemoryUnit.MB))).build(true);
+		
+		Cache<String, DoccatModel> cacheNLPModel = cacheManager.getCache("nlpModel", String.class, DoccatModel.class);
+//		DoccatModel doccatModel = NLPUtils.trainCategorizerModel();
+		DoccatModel doccatModelDukkan = NLPUtils.trainCategorizerModel(bundleContext,"gmTx-dukkaan.txt");
+		
+//		cacheNLPModel.put("nlpEngine", doccatModel);
+		cacheNLPModel.put("nlpDukkan", doccatModelDukkan);
+		camelContext.getRegistry().bind("myCacheManager", cacheManager);
+
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 
+		
+		
 		camelContext.addRoutes(new TalkToMeRoutes());
 
 	}
