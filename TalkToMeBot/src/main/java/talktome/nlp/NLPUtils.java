@@ -165,14 +165,26 @@ public class NLPUtils {
 				if(!"greeting".equals(category)) {
 					if("seller".equals(category)) {
 						replyBuilder.append("You want to Sell ");
-						
+						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
+							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
+							replyBuilder.append("Item = ");
+							replyBuilder.append(itenName);
+						}
 					}else if("buyer".equals(category)) {
 						replyBuilder.append("You want to Buy ");
+						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
+							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
+							replyBuilder.append("Item = ");
+							replyBuilder.append(itenName);
+						}
 					}
-					if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
-						String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
-						replyBuilder.append("Item = ");
-						replyBuilder.append(itenName);
+					
+					if("accounts_open".equals(category))	{
+						replyBuilder.append("Account Opening Form is by clicking down ");
+					}
+					
+					if("account_transfer".equals(category)) {
+						replyBuilder.append("Account Transfer from current account to other account Form is by clicking down ");
 					}
 
 					categoryWithMsgMap.put("category", category);
@@ -300,7 +312,7 @@ public class NLPUtils {
 //				new File(NLPUtils.class.getResource("META-INF/models/en-pos-maxent.bin").getFile()))) {
 
 		try (InputStream modelIn = new FileInputStream(
-				new File( System.getProperty( "karaf.etc" ) + File.separator + "en-maxent.bin") )) {
+				new File( System.getProperty( "karaf.etc" ) + File.separator + "en-pos-maxent.bin") )) {
 
 			// Initialize POS tagger tool
 			POSTaggerME myCategorizer = new POSTaggerME(new POSModel(modelIn));

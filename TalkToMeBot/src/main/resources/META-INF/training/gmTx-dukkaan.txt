@@ -1,3 +1,6 @@
 greeting hi. welcome. salaam. how are you.
+registration register me. need to get registered. can I register myself.
 seller baichna. selling. want to see. any buyer around. seller. sell fruits. sell wheat. sell vegitables.
 buyer kharidna. want to buy. buying. seller around. buy rice. buy wheat. buy fruits.
+account_transfer Transfer account. Account transfer from acount number to other .
+accounts_open Open account. I want to open my account . I want to open my account . Can I open account for myself. wanna open the account. want to open my account.

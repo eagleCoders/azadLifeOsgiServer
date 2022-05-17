@@ -10,6 +10,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+
+import opennlp.tools.doccat.DoccatModel;
 
 /**
  * @author anees-ur-rehman
@@ -18,6 +22,12 @@ import org.apache.camel.component.gson.GsonDataFormat;
 public class TalkToMeRoutes extends RouteBuilder{
 
 	private GsonDataFormat gsonDataFormat;
+	
+	Cache<String, DoccatModel> cacheNLPModel;
+	
+	public TalkToMeRoutes(CacheManager cacheManager) {
+		cacheNLPModel = cacheManager.getCache("nlpModel", String.class, DoccatModel.class);
+	}
 	
 	@Override
 	public void configure() throws Exception {
@@ -69,10 +79,51 @@ public class TalkToMeRoutes extends RouteBuilder{
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				// TODO Auto-generated method stub
+				Map<String, String> incomingMsgMap =(Map<String, String>) exchange.getIn().getBody();
+				
+				System.out.println("[TalkToMeRouter] : incoming Message : "+incomingMsgMap);
+				
+				String host = incomingMsgMap.get("sending-host");
+				String target = incomingMsgMap.get("target-host");
+				String incomingMsgText = incomingMsgMap.get("message");
+				
+				String destinationId = "activemq:queue:"+target;
+
+				Map<String, String> replymsg = talktome.nlp.NLPUtils.getCategory(cacheNLPModel.get("nlpDukkan"),
+						incomingMsgText);
+				
+				String reply = replymsg.get("reply");
+				
+				String routeId = "createRouteQueueId"+host;
+				
+				Map<String, String> messageMap = new HashMap<String, String>();
+				messageMap.put("messaegType", "WELCOME");
+				messageMap.put("messaeg", reply);
+
+				RouteBuilder.addRoutes(getContext(),  rb->{
+					rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
+						
+						@Override
+						public void process(Exchange exchange) throws Exception {
+							exchange.getIn().setBody(messageMap);
+							
+						}
+					}).marshal(gsonDataFormat).convertBodyTo(String.class).log("the data to send is ${body}").toD(destinationId)
+					.process(new Processor() {
+						
+						@Override
+						public void process(Exchange exchange) throws Exception {
+							getContext().removeRoute(routeId);
+						}
+					});
+					
+				});
 				
 			}
 		});
+		
+		
+		
 
 	}
 

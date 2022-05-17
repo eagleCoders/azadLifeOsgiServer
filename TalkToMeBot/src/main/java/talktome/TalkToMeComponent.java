@@ -103,7 +103,7 @@ public class TalkToMeComponent {
 
 		
 		
-		camelContext.addRoutes(new TalkToMeRoutes());
+		camelContext.addRoutes(new TalkToMeRoutes(cacheManager));
 
 	}
 	

@@ -32,6 +32,7 @@ public class BaseRoutes extends RouteBuilder {
 		
 		rest("/azadLife").get("/hello").to("direct:hello")
 		.get("/loadAllUsers").to("direct:loadUsers")
+		.get("/loadSelectedUser/{userName}").to("direct-vm:loadSelectedUser")
 		.post("/registration").to("direct-vm:proceedRegistration")
 		.post("/updateUserType").to("direct-vm:updateUserType")
 		.post("/updateNLPComm").to("direct-vm:updateNLPCommunication")

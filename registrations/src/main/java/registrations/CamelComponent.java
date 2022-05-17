@@ -41,6 +41,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 
 import registrations.routes.AuthenticationProcessor;
 import registrations.routes.RegistrationProcessRoutes;
+import registrations.routes.UsersManagementRoutes;
 
 //import org.apache.commons.dbcp.*
 
@@ -147,6 +148,7 @@ public class CamelComponent {
 		camelContext.addRoutes(new BaseRoutes());
 		camelContext.addRoutes(new RegistrationProcessRoutes());
 		camelContext.addRoutes(new AuthenticationProcessor());
+		camelContext.addRoutes(new UsersManagementRoutes());
 	}
 
 	@Deactivate

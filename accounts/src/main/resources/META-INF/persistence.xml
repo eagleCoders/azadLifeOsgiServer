@@ -14,7 +14,7 @@
 			<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> -->
 		<class>accounts.gl.domain.GLAccount</class>
 		<class>accounts.gl.domain.TrialBalance</class>
-
+		<class>infrastructure.codes.domain.CodeValue</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver"

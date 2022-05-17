@@ -1,0 +1,6 @@
+Selling <START:item> Vegitable <END> with <START:price> 50 PKR <END> . We want to buy <START:item> Fruits <END> having price <START:price> 50 PKR <END> .
+I want to buy <START:item> WaterMellon <END> having price <START:price>100 PKR<END> . I want sell <START:item> Mangoes <END> having price <START:price>100 PKR<END> .
+Buying the <START:item> WaterMellon <END> with price <START:price>100 PKR<END> per <START:weight> kg <END> .
+Buying the <START:item> WaterMellon <END> with price <START:price>100 PKR<END> per <START:weight> grames <END> today. 
+Buying the <START:item> Mangoes <END> with price <START:price>85 PKR<END> per <START:weight> kilo <END> tommorow .
+Buying the <START:item> Cauliflower <END> with price <START:price>30 USD<END> per <START:weight> gm <END> Now . 
