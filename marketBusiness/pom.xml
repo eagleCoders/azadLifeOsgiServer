@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.azadlife</groupId>
+    <artifactId>baseserver</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>marketBusiness</artifactId>
+  <packaging>bundle</packaging>
+  
+  	<dependencies>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.32.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.22</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+	</dependencies>
+  
+   	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<!-- <version>2.3.7</version> -->
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Include-Resource>src/main/resources</Include-Resource>
+						<Spring-Context>*;publish-context:=false;create-asynchronously:=true</Spring-Context>
+
+						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+ 
+						<!-- <Bundle-Activator>mi.mimos.mooc.esb.MoocActivator</Bundle-Activator> -->
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Import-Package>*</Import-Package>
+
+						<!-- <Import-Package>*,org.apache.camel.osgi</Import-Package> -->
+					<!-- 	
+						<Export-Package></Export-Package>
+					 -->
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

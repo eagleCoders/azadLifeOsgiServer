@@ -33,6 +33,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
 import opennlp.tools.doccat.DoccatModel;
+import opennlp.tools.namefind.TokenNameFinderModel;
 import talktome.nlp.NLPUtils;
 import talktome.routes.TalkToMeRoutes;
 
@@ -48,7 +49,7 @@ public class TalkToMeComponent {
 
 	@Activate
 	public void activate(ComponentContext componentContext) throws Exception {
-		
+
 		BundleContext bundleContext = componentContext.getBundleContext();
 		OsgiDefaultCamelContext osgiDefaultCamelContext = new OsgiDefaultCamelContext(bundleContext);
 		osgiDefaultCamelContext.setClassResolver(new OsgiClassResolver(camelContext, bundleContext));
@@ -56,7 +57,6 @@ public class TalkToMeComponent {
 		osgiDefaultCamelContext.setLanguageResolver(new OsgiLanguageResolver(bundleContext));
 		osgiDefaultCamelContext.setName("azzad-talktome");
 
-		
 //		=========== ActiveMQ Configuration ================
 		ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
 		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
@@ -69,11 +69,11 @@ public class TalkToMeComponent {
 		pooledConnectionFactory.setMaxConnections(15);
 		pooledConnectionFactory.setExpiryTimeout(-1);
 		pooledConnectionFactory.setIdleTimeout(-1);
-		
-		JmsConfiguration jmsConfiguration  = new JmsConfiguration();
+
+		JmsConfiguration jmsConfiguration = new JmsConfiguration();
 		jmsConfiguration.setConnectionFactory(pooledConnectionFactory);
 		jmsConfiguration.setConcurrentConsumers(50);
-		
+
 		ActiveMQComponent activeMqComponent = new ActiveMQComponent();
 		activeMqComponent.setConfiguration(jmsConfiguration);
 
@@ -81,32 +81,43 @@ public class TalkToMeComponent {
 		camelContext.getRegistry().bind("activemq", activeMqComponent);
 
 		PropertiesComponent pc = new PropertiesComponent();
-		pc.setLocation("file:${karaf.home}/etc/gmTx-dukkaan.txt"); 
+		pc.setLocation("file:${karaf.home}/etc/gmTx-dukkaan.txt");
 //		context.addComponent("properties", pc);
 		camelContext.getRegistry().bind("properties", pc);
 
-		CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().withCache("nlpModel",
-				CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, DoccatModel.class,
-						ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES).offheap(1,
-								MemoryUnit.MB))).build(true);
-		
+		CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+				.withCache("nlpModel",
+						CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, DoccatModel.class,
+								ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES).offheap(1,
+										MemoryUnit.MB)))
+				.withCache("nlpNameFinderModel",
+						CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, TokenNameFinderModel.class,
+								ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, EntryUnit.ENTRIES).offheap(1,
+										MemoryUnit.MB)))
+				.build(true)
+
+		;
+
 		Cache<String, DoccatModel> cacheNLPModel = cacheManager.getCache("nlpModel", String.class, DoccatModel.class);
+		Cache<String, TokenNameFinderModel> cacheNLPNameFinderModel = cacheManager.getCache("nlpNameFinderModel", String.class, TokenNameFinderModel.class);
 //		DoccatModel doccatModel = NLPUtils.trainCategorizerModel();
-		DoccatModel doccatModelDukkan = NLPUtils.trainCategorizerModel(bundleContext,"gmTx-dukkaan.txt");
-		
-//		cacheNLPModel.put("nlpEngine", doccatModel);
+		DoccatModel doccatModelDukkan = NLPUtils.trainCategorizerModel(bundleContext, "gmTx-dukkaan.txt");
+
+		TokenNameFinderModel buyingSellingModel = NLPUtils.trainBuySellModel();
 		cacheNLPModel.put("nlpDukkan", doccatModelDukkan);
+		
+		
+		cacheNLPNameFinderModel.put("nlpBuyingSelling", buyingSellingModel);
+		
 		camelContext.getRegistry().bind("myCacheManager", cacheManager);
 
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
 
-		
-		
 		camelContext.addRoutes(new TalkToMeRoutes(cacheManager));
 
 	}
-	
+
 	@Deactivate
 	public void deactivate() throws Exception {
 		camelContext.stop();

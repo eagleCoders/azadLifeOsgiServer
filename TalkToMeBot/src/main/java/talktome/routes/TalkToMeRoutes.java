@@ -14,6 +14,8 @@ import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 
 import opennlp.tools.doccat.DoccatModel;
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
 
 /**
  * @author anees-ur-rehman
@@ -24,9 +26,11 @@ public class TalkToMeRoutes extends RouteBuilder{
 	private GsonDataFormat gsonDataFormat;
 	
 	Cache<String, DoccatModel> cacheNLPModel;
+	Cache<String, TokenNameFinderModel> cacheNLPNameFinderModel;
 	
 	public TalkToMeRoutes(CacheManager cacheManager) {
 		cacheNLPModel = cacheManager.getCache("nlpModel", String.class, DoccatModel.class);
+		cacheNLPNameFinderModel = cacheManager.getCache("nlpNameFinderModel", String.class, TokenNameFinderModel.class);
 	}
 	
 	@Override
@@ -89,7 +93,9 @@ public class TalkToMeRoutes extends RouteBuilder{
 				
 				String destinationId = "activemq:queue:"+target;
 
-				Map<String, String> replymsg = talktome.nlp.NLPUtils.getCategory(cacheNLPModel.get("nlpDukkan"),
+				TokenNameFinderModel tokenNameFinderModel = cacheNLPNameFinderModel.get("nlpBuyingSelling");
+				NameFinderME nameFinderModel = new NameFinderME(tokenNameFinderModel);
+				Map<String, String> replymsg = talktome.nlp.NLPUtils.getCategory(cacheNLPModel.get("nlpDukkan"), nameFinderModel,
 						incomingMsgText);
 				
 				String reply = replymsg.get("reply");

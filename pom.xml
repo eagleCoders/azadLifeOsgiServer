@@ -13,6 +13,7 @@
 		<module>accounts</module>
 		<module>infrastructure</module>
 		<module>TalkToMeBot</module>
+		<module>marketBusiness</module>
 	</modules>
 	
 	<dependencyManagement>

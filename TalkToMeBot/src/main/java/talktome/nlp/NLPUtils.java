@@ -11,12 +11,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import opennlp.tools.chunker.ChunkerME;
@@ -30,7 +30,10 @@ import opennlp.tools.doccat.DocumentSampleStream;
 import opennlp.tools.doccat.FeatureGenerator;
 import opennlp.tools.lemmatizer.LemmatizerME;
 import opennlp.tools.lemmatizer.LemmatizerModel;
+import opennlp.tools.namefind.BioCodec;
 import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.NameSampleDataStream;
+import opennlp.tools.namefind.TokenNameFinderFactory;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
@@ -62,6 +65,30 @@ public class NLPUtils {
 	static DoccatModel model;
 
 	static BundleContext bundleContext;
+	
+	/*
+	 * Training Buying Selling Model
+	 */
+	public static TokenNameFinderModel trainBuySellModel() throws FileNotFoundException, IOException {
+		File file = new File( System.getProperty( "karaf.etc" ) + File.separator + "en-gmTxBuySell.train" );
+		InputStreamFactory in = new MarkableFileInputStreamFactory(file);
+		ObjectStream sampleStream = new NameSampleDataStream(
+              new PlainTextByLineStream(in, StandardCharsets.UTF_8));;
+		
+             
+            TrainingParameters params = new TrainingParameters();
+            params.put(TrainingParameters.ITERATIONS_PARAM, 70);
+            params.put(TrainingParameters.CUTOFF_PARAM, 1);
+              TokenNameFinderModel model = NameFinderME.train(
+            		  "en",
+            		  null,
+            		  sampleStream, params,
+            		  TokenNameFinderFactory.create(null, null, Collections.emptyMap(), new BioCodec()) );
+              NameFinderME nameFinder = new NameFinderME(model);
+              return model;
+
+	}
+	
 
 	public static DoccatModel trainCategorizerModel(BundleContext bundleContext,String resourcePath) throws FileNotFoundException, IOException {
 		NLPUtils.bundleContext = bundleContext;
@@ -119,7 +146,7 @@ public class NLPUtils {
 		return model;
 	}
 	
-	public static Map<String, String> getCategory(DoccatModel model, String inputString) {
+	public static Map<String, String> getCategory(DoccatModel model, NameFinderME nameFinderModel ,String inputString) {
 		String answer = "";
 		String repCategory = "";
 		Map<String, String> categoryWithMsgMap = new HashMap<String, String>();
@@ -154,29 +181,27 @@ public class NLPUtils {
 				detectName(tokens);
 
 				getNounBasedTokens(tokens, posTags);
-				// Get predefined answer from given category & add to answer.
 
-//				System.out.println("========> questionAnswer : " + questionAnswer);
-
-//				System.out.println("========> answer : " + questionAnswer.get(category));
-//
-//				answer = answer + " " + questionAnswer.get(category);
 				StringBuilder replyBuilder = new StringBuilder();
 				if(!"greeting".equals(category)) {
 					if("seller".equals(category)) {
 						replyBuilder.append("You want to Sell ");
-						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
-							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
-							replyBuilder.append("Item = ");
-							replyBuilder.append(itenName);
-						}
+						String responseString = constructResponse(tokens, nameFinderModel.find(tokens));
+						replyBuilder.append("You want to Sell "+responseString);
+//						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
+//							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
+//							replyBuilder.append("Item = ");
+//							replyBuilder.append(itenName);
+//						}
 					}else if("buyer".equals(category)) {
 						replyBuilder.append("You want to Buy ");
-						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
-							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
-							replyBuilder.append("Item = ");
-							replyBuilder.append(itenName);
-						}
+						String responseString = constructResponse(tokens, nameFinderModel.find(tokens));
+						replyBuilder.append("You want to Sell "+responseString);
+//						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
+//							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
+//							replyBuilder.append("Item = ");
+//							replyBuilder.append(itenName);
+//						}
 					}
 					
 					if("accounts_open".equals(category))	{
@@ -209,6 +234,32 @@ public class NLPUtils {
 		System.out.println("##### Chat Bot: " + answer);
 
 		return categoryWithMsgMap;
+	}
+	
+	/**
+	 * 
+	 * @param tokens
+	 * @param names
+	 * @return
+	 */
+	private static String constructResponse(String[] tokens,Span[] names) {
+        System.out.println("===========>"+names.length);
+        StringBuilder replyString = new StringBuilder();
+        for(Span name: names) {
+      	  String personName="";
+      	  System.out.println(name.getStart()+ " "+name.getEnd());
+      	  for(int i=name.getStart();i<name.getEnd();i++){
+              personName+=tokens[i]+" ";
+          }
+      	  if(name.getType().equals("item")) {
+      		replyString.append("Item : "+personName +" | ");
+      	  }else if(name.getType().equals("price")) {
+      		replyString.append("Price : "+personName +" |  ");
+      	  }else if(name.getType().equals("weight")) {
+        	replyString.append("Weight : "+personName +"  ");
+      	  }
+        }
+        return replyString.toString();
 	}
 
 	/**
