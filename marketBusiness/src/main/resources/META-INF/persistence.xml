@@ -14,6 +14,7 @@
 			<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> -->
 		<class>marketBusiness.domain.BusinessMasterBean</class>
 		<class>marketBusiness.domain.BusinessBranchesBean</class>
+		<class>marketBusiness.domain.BusinessBranchsInventory</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
