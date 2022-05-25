@@ -64,7 +64,7 @@ public class MarketBusinessComponent {
 		PersistenceProvider persistenceProvider = ( PersistenceProvider ) bundleContext.getService(serviceReference);
 		
 		emf = persistenceProvider.createEntityManagerFactory(
-                "fineractAccounts_unit",
+                "businessMarket_unit",
                 null
             );
 		

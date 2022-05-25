@@ -48,7 +48,7 @@ public class BusinessBranchesBean implements Serializable{
 	@Column(name="isprimary")
 	private Boolean primaryBranch = false;
 	
-	private List<BusinessBranchsInventory> businessInventories;
+//	private List<BusinessBranchsInventory> businessInventories;
 	
 //	@Column(name="master_code")
 //	private BusinessMasterBean businessMasterBean;

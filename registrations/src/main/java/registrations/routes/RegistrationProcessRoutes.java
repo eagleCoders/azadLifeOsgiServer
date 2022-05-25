@@ -171,7 +171,8 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						// TODO Auto-generated method stub
 //						UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
 //						userRegistrationBean.setMessage("Registraion is completed Successully");
-						Map<String, String> map = new HashMap<String, String>();
+						List<Map<String, String>> resultBody = (List<Map<String, String>>) exchange.getIn().getBody();
+						Map<String, String> map = resultBody.get(0);
 						map.put("message", "Registraion is completed Successully");
 						exchange.getIn().setBody(map);
 					}
