@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import registrations.domain.types.StatusTypes;
 import registrations.domain.types.UserType;
 
 /**
@@ -47,10 +48,14 @@ public class UserTypeChangeBean implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private UserType userType;
 	
-//	Levels are 0, 1, 2, 3, 4, 5, 6
+//	Levels are 0, 1, 2, 3, 4, 5, 6, 9
 	@Column(name="user_level")
 	private Integer userTypeLevel;
 
+	@Column(name="user_updSts")
+	@Enumerated(EnumType.STRING)
+	private StatusTypes statusTypes;
+	
 	public Integer getUserTypeid() {
 		return userTypeid;
 	}
@@ -82,8 +87,20 @@ public class UserTypeChangeBean implements Serializable {
 	public void setUserTypeLevel(Integer userTypeLevel) {
 		this.userTypeLevel = userTypeLevel;
 	}
-	
-	
 
+	/**
+	 * @return the statusTypes
+	 */
+	public StatusTypes getStatusTypes() {
+		return statusTypes;
+	}
+
+	/**
+	 * @param statusTypes the statusTypes to set
+	 */
+	public void setStatusTypes(StatusTypes statusTypes) {
+		this.statusTypes = statusTypes;
+	}
+	
 	
 }

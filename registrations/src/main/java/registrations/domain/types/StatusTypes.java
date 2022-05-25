@@ -7,6 +7,6 @@ package registrations.domain.types;
  * @author anees-ur-rehman
  *
  */
-public enum UserType {
-	MERCHANDISER, RETAILER, CONSUMER, AGENT, GUEST, DOCTOR, NURSE
+public enum StatusTypes {
+	APPROVED, PENDING, REJECTED, REVERTED
 }

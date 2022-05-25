@@ -55,7 +55,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 				Map<String, String> messageMap = new HashMap<String, String>();
 				messageMap.put("messaegType", "WELCOME");
 				messageMap.put("messaeg", "WELCOME From the Server: You are Registered to communicate");
-				
+				messageMap.put("category", "CHATBOX");
 				RouteBuilder.addRoutes(getContext(),  rb->{
 					rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
 						
@@ -75,9 +75,46 @@ public class TalkToMeRoutes extends RouteBuilder{
 					
 				});
 			}
+		}).to("direct:updateInfoToAdmin");
+		
+		from("direct:updateInfoToAdmin").routeId("direct:updateInfoToAdmin").log("Update the information to the Adminstration Role Users").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				StringBuilder selectStatment = new StringBuilder();
+				
+				Map<String, String> map = (Map<String, String>) exchange.getIn().getHeader("AzadLifeUserRegistrationMap");
+				if(null != map) {
+					String destinationId = "activemq:queue:system@admin";
+//					destinationBuilder.append("activemq:queue:");
+//					destinationBuilder.append(userQueueiD);
+					String routeId = "createRouteQueueId"+System.currentTimeMillis();
+					Map<String, String> messageMap = new HashMap<String, String>();
+					map.put("messaegType", "NEW_REGISTRATION_REQ");
+					map.put("category", "USER_PROFILE");
+					
+					RouteBuilder.addRoutes(getContext(),  rb->{
+						rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
+							
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								exchange.getIn().setBody(messageMap);
+								
+							}
+						}).marshal(gsonDataFormat).convertBodyTo(String.class).log("the data to send is ${body}").toD(destinationId)
+						.process(new Processor() {
+							
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								getContext().removeRoute("");
+							}
+						});
+					});
+				}
+
+
+			}
 		});
-		
-		
 		
 		from("direct-vm:updateNLPCommunication").routeId("direct-vm_updateNLPCommunication").log("Welcome to the NLP Chat Route").process(new Processor() {
 			

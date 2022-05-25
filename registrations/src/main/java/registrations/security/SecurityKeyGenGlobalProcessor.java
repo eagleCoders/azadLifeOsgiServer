@@ -63,7 +63,7 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
 		
 		Map<String, String> map= bodyMap.entrySet().stream().filter(e-> e.getValue() != null).collect(Collectors.toMap(e-> e.getKey(), e-> e.getValue()));
-		System.out.println(" the Body for Return Back : "+map);
+//		System.out.println(" the Body for Return Back : "+map);
 		map.put("globalId", encryptedGlobalID);
 		StringBuilder insertStatement = new StringBuilder();
 		insertStatement.append(
