@@ -62,7 +62,7 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		
 		UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
 		
-		Map<String, Object> map= bodyMap.entrySet().stream().filter(e-> e.getValue() != null).collect(Collectors.toMap(e-> e.getKey(), e-> e.getValue()));
+		Map<String, String> map= bodyMap.entrySet().stream().filter(e-> e.getValue() != null).collect(Collectors.toMap(e-> e.getKey(), e-> e.getValue()));
 		System.out.println(" the Body for Return Back : "+map);
 		map.put("globalId", encryptedGlobalID);
 		StringBuilder insertStatement = new StringBuilder();
@@ -87,7 +87,8 @@ public class SecurityKeyGenGlobalProcessor implements Processor {
 		exchange.getIn().setHeader("globalid", encryptedGlobalID);
 		exchange.getIn().setHeader("userId", cnic);
 		
-		exchange.getIn().setHeader("TelegramBotSecureMap", map);
+		exchange.getIn().setHeader("AzadLifeUserRegistrationMap", map);
+		
 		
 
 		exchange.getIn().setBody(insertStatement.toString());

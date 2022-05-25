@@ -38,20 +38,20 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 		gsonDataFormat.setUnmarshalType(Map.class);
 
 		
-		onException(Exception.class, SQLException.class, PSQLException.class)
-		.handled(true).process(new Processor() {
-
-			@Override
-			public void process(Exchange exchange) throws Exception {
-				// TODO Auto-generated method stub
-				log.info("PSQL Exception caught....");
-				Throwable caused = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("message", "Exception caught");
-				exchange.getIn().setBody(map);
-
-			}
-		}).marshal(gsonDataFormat).convertBodyTo(String.class);
+//		onException(Exception.class, SQLException.class, PSQLException.class)
+//		.handled(true).process(new Processor() {
+//
+//			@Override
+//			public void process(Exchange exchange) throws Exception {
+//				// TODO Auto-generated method stub
+//				log.info("PSQL Exception caught....");
+//				Throwable caused = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+//				Map<String, String> map = new HashMap<String, String>();
+//				map.put("message", "Exception caught");
+//				exchange.getIn().setBody(map);
+//
+//			}
+//		}).marshal(gsonDataFormat).convertBodyTo(String.class);
 
 //		=============== Admin Registration Route(One time when started and No Admin user setup by the server) ======================
 		from("timer:stream?repeatCount=1").routeId("timer_startupAdminConfiguration")
@@ -169,10 +169,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 					@Override
 					public void process(Exchange exchange) throws Exception {
 						// TODO Auto-generated method stub
-//						UserRegistrationBean userRegistrationBean = new UserRegistrationBean();
-//						userRegistrationBean.setMessage("Registraion is completed Successully");
-						List<Map<String, String>> resultBody = (List<Map<String, String>>) exchange.getIn().getBody();
-						Map<String, String> map = resultBody.get(0);
+						Map<String, String> map = (Map<String, String>) exchange.getIn().getHeader("AzadLifeUserRegistrationMap");
 						map.put("message", "Registraion is completed Successully");
 						exchange.getIn().setBody(map);
 					}

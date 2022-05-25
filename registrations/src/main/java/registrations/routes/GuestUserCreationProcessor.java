@@ -28,9 +28,9 @@ public class GuestUserCreationProcessor implements Processor{
 		stringBuilder.append(".");
 		stringBuilder.append(bodyMap.get("userRoles"));
 		stringBuilder.append(".");
-		stringBuilder.append(String.valueOf(bodyMap.get("password")));
+		stringBuilder.append(String.valueOf(bodyMap.get("userPassword")));
 		stringBuilder.append(".");
-		stringBuilder.append(bodyMap.get("emailAddress"));
+		stringBuilder.append(bodyMap.get("email"));
 		stringBuilder.append(".");
 		stringBuilder.append("this is the first time user");
 
