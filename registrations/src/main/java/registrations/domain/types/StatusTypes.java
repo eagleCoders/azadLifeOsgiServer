@@ -8,5 +8,5 @@ package registrations.domain.types;
  *
  */
 public enum StatusTypes {
-	APPROVED, PENDING, REJECTED, REVERTED
+	NEW_REQUEST, APPROVED, PENDING, REJECTED, REVERTED
 }

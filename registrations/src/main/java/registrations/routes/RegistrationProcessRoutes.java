@@ -3,7 +3,6 @@
  */
 package registrations.routes;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
-import org.postgresql.util.PSQLException;
 
 import registrations.domain.UserTypeChangeBean;
 import registrations.domain.types.UserType;
@@ -29,6 +27,20 @@ import registrations.security.utils.EncryptDecryptUtils;
 public class RegistrationProcessRoutes extends RouteBuilder {
 
 	private GsonDataFormat gsonDataFormat;
+	
+	Map<String, UserType> userRoleDataMap;
+	public RegistrationProcessRoutes() {
+
+		userRoleDataMap = new HashMap<String, UserType>();
+		userRoleDataMap.put("*", UserType.SUPER_USER);
+		userRoleDataMap.put("1", UserType.DOCTOR);
+		userRoleDataMap.put("2", UserType.NURSE);
+		userRoleDataMap.put("3", UserType.MERCHANT);
+		userRoleDataMap.put("4", UserType.RETAILER);
+		userRoleDataMap.put("9", UserType.ADMIN);
+		userRoleDataMap.put("00", UserType.GUEST);
+
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -257,15 +269,16 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //		.to("direct:userTypeSelectionQuery");
 
 		from("direct-vm:updateUserType").routeId("direct-vm:updateUserType")
-				.log("Welcome to the Merchandiser update route").unmarshal(gsonDataFormat).process(new Processor() {
+				.log("Welcome to the Merchandiser update route").process(new Processor() {
 
 					@Override
 					public void process(Exchange exchange) throws Exception {
 						Map<String, String> bodyMap = (Map<String, String>) exchange.getIn().getBody();
+						System.out.println();
 //						Map<String, String> bodyMap = new HashMap<String, String>();
-						String globalId = (bodyMap.containsKey("globalid")) ? bodyMap.get("globalid") : "abcd999AAAKLM";
-						UserType userTypeSelected = (bodyMap.containsKey("user_type_level"))
-								? UserType.valueOf(bodyMap.get("user_type_level"))
+						String globalId = (bodyMap.containsKey("globalId")) ? bodyMap.get("globalId") : "abcd999AAAKLM";
+						UserType userTypeSelected = (bodyMap.containsKey("userRoles"))
+								? userRoleDataMap.get(bodyMap.get("userRoles"))
 								: UserType.GUEST;
 						Integer userTypeLevel = (bodyMap.containsKey("user_type_level"))
 								? Integer.valueOf(bodyMap.get("user_type_level"))

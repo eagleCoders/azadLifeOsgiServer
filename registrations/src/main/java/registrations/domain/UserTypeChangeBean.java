@@ -54,7 +54,7 @@ public class UserTypeChangeBean implements Serializable {
 
 	@Column(name="user_updSts")
 	@Enumerated(EnumType.STRING)
-	private StatusTypes statusTypes;
+	private StatusTypes statusTypes = StatusTypes.NEW_REQUEST;
 	
 	public Integer getUserTypeid() {
 		return userTypeid;
