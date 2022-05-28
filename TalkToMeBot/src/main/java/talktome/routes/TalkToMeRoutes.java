@@ -81,15 +81,15 @@ public class TalkToMeRoutes extends RouteBuilder{
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				StringBuilder selectStatment = new StringBuilder();
 				
 				Map<String, String> map = (Map<String, String>) exchange.getIn().getHeader("AzadLifeUserRegistrationMap");
 				if(null != map) {
-					String destinationId = "activemq:queue:system@admin";
+					String destinationId = "activemq:queue:super@admin";
 //					destinationBuilder.append("activemq:queue:");
 //					destinationBuilder.append(userQueueiD);
 					String routeId = "createRouteQueueId"+System.currentTimeMillis();
-					Map<String, String> messageMap = new HashMap<String, String>();
+//					Map<String, String> messageMap = new HashMap<String, String>();
+					
 					map.put("messaegType", "NEW_REGISTRATION_REQ");
 					map.put("category", "USER_PROFILE");
 					
@@ -98,7 +98,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 							
 							@Override
 							public void process(Exchange exchange) throws Exception {
-								exchange.getIn().setBody(messageMap);
+								exchange.getIn().setBody(map);
 								
 							}
 						}).marshal(gsonDataFormat).convertBodyTo(String.class).log("the data to send is ${body}").toD(destinationId)
@@ -113,6 +113,37 @@ public class TalkToMeRoutes extends RouteBuilder{
 				}
 
 
+			}
+		});
+		
+		from("direct-vm:updateUserStatusToAdmin").routeId("direct-vm:updateUserStatusToAdmin").log("Welcome to bean Info to Admin").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				Map<String, String> map = (Map<String, String>) exchange.getIn().getBody();
+				if(null != map) {
+					String routeId = "createRouteQueueId"+System.currentTimeMillis();
+					String destinationId = "activemq:queue:super@admin";
+					
+					RouteBuilder.addRoutes(getContext(),  rb->{
+						rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
+							
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								exchange.getIn().setBody(map);
+								
+							}
+						}).marshal(gsonDataFormat).convertBodyTo(String.class).log("the data to send is ${body}").toD(destinationId)
+						.process(new Processor() {
+							
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								getContext().removeRoute("");
+							}
+						});
+					});
+
+				}
 			}
 		});
 		

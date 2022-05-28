@@ -14,6 +14,7 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.gson.GsonDataFormat;
 
+import registrations.domain.UserRegistrationBean;
 import registrations.domain.UserTypeChangeBean;
 import registrations.domain.types.UserType;
 import registrations.security.SecurityKeyGenGlobalProcessor;
@@ -327,7 +328,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 				UserTypeChangeBean bean = (UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
 				exchange.getIn().setBody(bean);
 			}
-		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?usePersist=true");
+		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?usePersist=true").to("direct:transformBean2Map");
 
 		from("direct:updateUserType").routeId("direct:updateUserType").process(new Processor() {
 
@@ -336,7 +337,43 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 				UserTypeChangeBean bean = (UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_MERCHANTTYPE");
 				exchange.getIn().setBody(bean);
 			}
-		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?useExecuteUpdate=true");
+		}).transacted().toD("jpa://" + UserTypeChangeBean.class.getName() + "?useExecuteUpdate=true").to("direct:transformBean2Map");
+		
+		
+		from("direct:transformBean2Map").routeId("direct:transformBean2Map").log("Route to Translate Bean to Map").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				
+				exchange.getIn().removeHeader("AZADPAY_MERCHANTTYPE");
+				UserTypeChangeBean bean = (UserTypeChangeBean) exchange.getIn().getBody();
+				exchange.getIn().setHeader("AZADPAY_UserRegistrationBean", bean);
+				
+			}
+		}).toD("jpa://" + UserRegistrationBean.class.getName() + "?resultClass="
+				+ UserRegistrationBean.class.getName() + "&query=select b from "
+				+ UserRegistrationBean.class.getName() + " b where b.userRegistrationPk.globalId = '${header.AZADPAY_GLOBALID}'").process(new Processor() {
+					
+					@Override
+					public void process(Exchange exchange) throws Exception {
+						List<UserRegistrationBean> listMap = (List<UserRegistrationBean>) exchange.getIn().getBody();
+						UserRegistrationBean userRegistrationBean = listMap.get(0);
+						Map<String, String> map = new HashMap<String, String>();
+						
+						UserTypeChangeBean userTypeChangeBean = (UserTypeChangeBean) exchange.getIn().getHeader("AZADPAY_UserRegistrationBean");
+						
+						map.put("userName", userRegistrationBean.getUserName());
+						map.put("globalId", userTypeChangeBean.getGlobalId());
+						map.put("updateStatus", userTypeChangeBean.getStatusTypes().toString());
+						map.put("messaegType", userTypeChangeBean.getStatusTypes().toString());
+						map.put("messaegType", "STATUS_UPDATE_REQ");
+						map.put("category", "USER_PROFILE");
+						
+						System.out.println("[RegistrationProcessRoutes] : direct:transformBean2Map : userName :  "+userRegistrationBean.getUserName() + " | "+userRegistrationBean.getUserRegistrationPk().getSecurityID());
+						exchange.getIn().removeHeader("AZADPAY_UserRegistrationBean");
+						exchange.getIn().setBody(map);
+					}
+				}).to("direct-vm:updateUserStatusToAdmin");
 
 	}
 

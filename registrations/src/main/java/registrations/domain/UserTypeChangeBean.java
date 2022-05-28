@@ -4,6 +4,8 @@
 package registrations.domain;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -102,5 +104,16 @@ public class UserTypeChangeBean implements Serializable {
 		this.statusTypes = statusTypes;
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getMap(){
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("globalId", getGlobalId());
+		map.put("userType", getUserType().toString());
+		map.put("userLevel", String.valueOf(getUserTypeLevel()));
+		map.put("userUpdStatus", getStatusTypes().toString());
+		return map;
+	}
 }
