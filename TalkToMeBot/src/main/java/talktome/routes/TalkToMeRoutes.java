@@ -91,6 +91,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 //					Map<String, String> messageMap = new HashMap<String, String>();
 					
 					map.put("messaegType", "NEW_REGISTRATION_REQ");
+					map.put("messaeg", "New Registration Request");
 					map.put("category", "USER_PROFILE");
 					
 					RouteBuilder.addRoutes(getContext(),  rb->{
