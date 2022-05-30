@@ -93,7 +93,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 					map.put("messaegType", "NEW_REGISTRATION_REQ");
 					map.put("messaeg", "New Registration Request");
 					map.put("category", "USER_PROFILE");
-					
+					map.put("actions", "NONE");
 					RouteBuilder.addRoutes(getContext(),  rb->{
 						rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
 							
