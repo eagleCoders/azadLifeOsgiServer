@@ -9,7 +9,9 @@
 
 	<modules>
 		<module>registrations</module>
+		<!-- 
 		<module>socialmediabots</module>
+		 -->
 		<module>accounts</module>
 		<module>infrastructure</module>
 		<module>TalkToMeBot</module>
