@@ -373,7 +373,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 						map.put("messaegType", "STATUS_UPDATE_REQ");
 						map.put("category", "USER_PROFILE");
 						map.put("ttl", "7000");
-						map.put("actions", "APPROVED:REJECT");
+						map.put("actions", "APPROVE:REJECT");
 						System.out.println("[RegistrationProcessRoutes] : direct:transformBean2Map : userName :  "+userRegistrationBean.getUserName() + " | "+userRegistrationBean.getUserRegistrationPk().getSecurityID());
 						exchange.getIn().removeHeader("AZADPAY_UserRegistrationBean");
 						exchange.getIn().setBody(map);

@@ -52,11 +52,11 @@ public class MarketBusinessComponent {
 		
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
-//		dataSource.setUsername("ubuntu");
-//		dataSource.setPassword("asanlife_#");
+		dataSource.setUsername("ubuntu");
+		dataSource.setPassword("asanlife_#");
 
-		dataSource.setUsername("postgres");
-		dataSource.setPassword("madho1431");
+//		dataSource.setUsername("postgres");
+//		dataSource.setPassword("madho1431");
 		
 		ServiceReference serviceReference =bundleContext.getServiceReference(
                 PersistenceProvider.class.getName());
