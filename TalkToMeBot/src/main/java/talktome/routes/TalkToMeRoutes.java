@@ -167,20 +167,29 @@ public class TalkToMeRoutes extends RouteBuilder{
 				Map<String, String> replymsg = talktome.nlp.NLPUtils.getCategory(cacheNLPModel.get("nlpDukkan"), nameFinderModel,
 						incomingMsgText);
 				
+				System.out.println("[TalkToMeRoutes] : the NLP reply Message : "+replymsg);
 				String reply = replymsg.get("reply");
 				
 				String routeId = "createRouteQueueId"+host;
 				
-				Map<String, String> messageMap = new HashMap<String, String>();
-				messageMap.put("messaegType", "WELCOME");
-				messageMap.put("messaeg", reply);
+				Map<String, Object> messageMap = new HashMap<String, Object>();
+//				messageMap.put("messaegType", "WELCOME");
+//				messageMap.put("messaeg", reply);
+//				messageMap.put("category", replymsg.get("category"));
+//				messageMap.put("ttl", "7000");
+
+				replymsg.put("messaegType", "WELCOME");
+				replymsg.put("messaeg", reply);
+//				replymsg.put("category", replymsg.get("category"));
+				replymsg.put("ttl", "7000");
+				
 
 				RouteBuilder.addRoutes(getContext(),  rb->{
 					rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
 						
 						@Override
 						public void process(Exchange exchange) throws Exception {
-							exchange.getIn().setBody(messageMap);
+							exchange.getIn().setBody(replymsg);
 							
 						}
 					}).marshal(gsonDataFormat).convertBodyTo(String.class).log("the data to send is ${body}").toD(destinationId)

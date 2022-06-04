@@ -186,7 +186,7 @@ public class NLPUtils {
 				if(!"greeting".equals(category)) {
 					if("seller".equals(category)) {
 						replyBuilder.append("You want to Sell ");
-						String responseString = constructResponse(tokens, nameFinderModel.find(tokens));
+						String responseString = constructResponse(tokens, nameFinderModel.find(tokens), categoryWithMsgMap);
 						replyBuilder.append("You want to Sell "+responseString);
 //						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
 //							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
@@ -194,9 +194,9 @@ public class NLPUtils {
 //							replyBuilder.append(itenName);
 //						}
 					}else if("buyer".equals(category)) {
-						replyBuilder.append("You want to Buy ");
-						String responseString = constructResponse(tokens, nameFinderModel.find(tokens));
-						replyBuilder.append("You want to Sell "+responseString);
+//						replyBuilder.append("You want to Buy ");
+						String responseString = constructResponse(tokens, nameFinderModel.find(tokens), categoryWithMsgMap);
+						replyBuilder.append("You want to Buy "+responseString);
 //						if(wordWithGrammerMap.entrySet().iterator().hasNext()) {
 //							String itenName = wordWithGrammerMap.entrySet().iterator().next().getKey();
 //							replyBuilder.append("Item = ");
@@ -242,7 +242,7 @@ public class NLPUtils {
 	 * @param names
 	 * @return
 	 */
-	private static String constructResponse(String[] tokens,Span[] names) {
+	private static String constructResponse(String[] tokens,Span[] names, Map<String, String> categoryWithMsgMap ) {
         System.out.println("===========>"+names.length);
         StringBuilder replyString = new StringBuilder();
         for(Span name: names) {
@@ -253,9 +253,12 @@ public class NLPUtils {
           }
       	  if(name.getType().equals("item")) {
       		replyString.append("Item : "+personName +" | ");
+      		categoryWithMsgMap.put("item", personName);
       	  }else if(name.getType().equals("price")) {
+       		categoryWithMsgMap.put("price", personName);
       		replyString.append("Price : "+personName +" |  ");
       	  }else if(name.getType().equals("weight")) {
+         	categoryWithMsgMap.put("weight", personName);
         	replyString.append("Weight : "+personName +"  ");
       	  }
         }
