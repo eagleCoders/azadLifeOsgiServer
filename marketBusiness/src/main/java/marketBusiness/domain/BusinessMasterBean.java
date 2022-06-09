@@ -22,7 +22,8 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import marketBusiness.domain.types.BusinessTypes;
+import marketBusiness.domain.types.BusinessType;
+import marketBusiness.domain.types.RegistrationType;
 
 /**
  * @author anees-ur-rehman
@@ -51,7 +52,7 @@ public class BusinessMasterBean implements Serializable {
 	
 	@Column(name="biz_type")
 	@Enumerated(EnumType.STRING)
-	private BusinessTypes businessType;
+	private BusinessType businessType;
 	
 	@Column(name="biz_banner", length=10485760)
 	private String businessBanner;
@@ -59,14 +60,13 @@ public class BusinessMasterBean implements Serializable {
 	@Column(name="biz_reciept", length=10485760)
 	private String businessRecieptImage;
 	
-	@Column(name="biz_lat")
-	private Long businessLatitude;
-	
-	@Column(name="biz_lang")
-	private Long businessLongitude;
 	
 	@Column(name="biz_address")
 	private String businessCoreAddress;
+	
+	@Column(name="biz_regType")
+	@Enumerated(EnumType.STRING)
+	private RegistrationType registrationType;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = BusinessBranchesBean.class)
 	@JoinColumn( name = "master_code")
@@ -103,14 +103,14 @@ public class BusinessMasterBean implements Serializable {
 	/**
 	 * @return the businessType
 	 */
-	public BusinessTypes getBusinessType() {
+	public BusinessType getBusinessType() {
 		return businessType;
 	}
 
 	/**
 	 * @param businessType the businessType to set
 	 */
-	public void setBusinessType(BusinessTypes businessType) {
+	public void setBusinessType(BusinessType businessType) {
 		this.businessType = businessType;
 	}
 
@@ -143,34 +143,6 @@ public class BusinessMasterBean implements Serializable {
 	}
 
 	/**
-	 * @return the businessLatitude
-	 */
-	public Long getBusinessLatitude() {
-		return businessLatitude;
-	}
-
-	/**
-	 * @param businessLatitude the businessLatitude to set
-	 */
-	public void setBusinessLatitude(Long businessLatitude) {
-		this.businessLatitude = businessLatitude;
-	}
-
-	/**
-	 * @return the businessLongitude
-	 */
-	public Long getBusinessLongitude() {
-		return businessLongitude;
-	}
-
-	/**
-	 * @param businessLongitude the businessLongitude to set
-	 */
-	public void setBusinessLongitude(Long businessLongitude) {
-		this.businessLongitude = businessLongitude;
-	}
-
-	/**
 	 * @return the businessCoreAddress
 	 */
 	public String getBusinessCoreAddress() {
@@ -197,7 +169,19 @@ public class BusinessMasterBean implements Serializable {
 	public void setBusinessBranches(List<BusinessBranchesBean> businessBranches) {
 		this.businessBranches = businessBranches;
 	}
-	
-	
+
+	/**
+	 * @return the registrationType
+	 */
+	public RegistrationType getRegistrationType() {
+		return registrationType;
+	}
+
+	/**
+	 * @param registrationType the registrationType to set
+	 */
+	public void setRegistrationType(RegistrationType registrationType) {
+		this.registrationType = registrationType;
+	}
 	
 }

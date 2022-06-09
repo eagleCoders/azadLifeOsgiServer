@@ -27,6 +27,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 
+import marketBusiness.routes.BusinessManagementRoutes;
+
 /**
  * @author anees-ur-rehman
  *
@@ -52,11 +54,11 @@ public class MarketBusinessComponent {
 		
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/azadPayments");
-		dataSource.setUsername("ubuntu");
-		dataSource.setPassword("asanlife_#");
+//		dataSource.setUsername("ubuntu");
+//		dataSource.setPassword("asanlife_#");
 
-//		dataSource.setUsername("postgres");
-//		dataSource.setPassword("madho1431");
+		dataSource.setUsername("postgres");
+		dataSource.setPassword("madho1431");
 		
 		ServiceReference serviceReference =bundleContext.getServiceReference(
                 PersistenceProvider.class.getName());
@@ -84,6 +86,7 @@ public class MarketBusinessComponent {
 		camelContext.getRegistry().bind("jpa", jpaComponent);
 		serviceRegistration = bundleContext.registerService(CamelContext.class, camelContext, null);
 		camelContext.start();
+		camelContext.addRoutes(new BusinessManagementRoutes());
 	}
 	
 	@Deactivate

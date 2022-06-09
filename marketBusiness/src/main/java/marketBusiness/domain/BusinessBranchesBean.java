@@ -38,7 +38,10 @@ public class BusinessBranchesBean implements Serializable{
 	@Column(name="branch_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "kys_bizBranch")
 	private Integer id;
-	
+
+	@Column(name="branch_position")
+	private Integer branchPosition;
+
 	@Column(name="branch_name")
 	private String branchName;
 	
@@ -47,6 +50,13 @@ public class BusinessBranchesBean implements Serializable{
 
 	@Column(name="isprimary")
 	private Boolean primaryBranch = false;
+	
+	@Column(name="biz_lat")
+	private Long businessLatitude;
+	
+	@Column(name="biz_lang")
+	private Long businessLongitude;
+
 	
 //	private List<BusinessBranchsInventory> businessInventories;
 	
@@ -65,6 +75,20 @@ public class BusinessBranchesBean implements Serializable{
 	 */
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the branchPosition
+	 */
+	public Integer getBranchPosition() {
+		return branchPosition;
+	}
+
+	/**
+	 * @param branchPosition the branchPosition to set
+	 */
+	public void setBranchPosition(Integer branchPosition) {
+		this.branchPosition = branchPosition;
 	}
 
 	/**
@@ -109,7 +133,34 @@ public class BusinessBranchesBean implements Serializable{
 		this.primaryBranch = primaryBranch;
 	}
 	
-	
+	/**
+	 * @return the businessLatitude
+	 */
+	public Long getBusinessLatitude() {
+		return businessLatitude;
+	}
+
+	/**
+	 * @param businessLatitude the businessLatitude to set
+	 */
+	public void setBusinessLatitude(Long businessLatitude) {
+		this.businessLatitude = businessLatitude;
+	}
+
+	/**
+	 * @return the businessLongitude
+	 */
+	public Long getBusinessLongitude() {
+		return businessLongitude;
+	}
+
+	/**
+	 * @param businessLongitude the businessLongitude to set
+	 */
+	public void setBusinessLongitude(Long businessLongitude) {
+		this.businessLongitude = businessLongitude;
+	}
+
 
 //	/**
 //	 * @return the businessMasterBean

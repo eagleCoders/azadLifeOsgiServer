@@ -148,6 +148,15 @@ public class TalkToMeRoutes extends RouteBuilder{
 			}
 		});
 		
+		from("direct-vm:updateBusinessRegistrationToAdmin").routeId("direct-vm:updateBusinessRegistrationToAdmin").log("Welcome to Biz Info to Admin").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				Map<String, Object> bodyMap = (Map<String, Object>) exchange.getIn().getHeader("AZADPAY_BusinessMasterBean");
+				
+			}
+		});
+		
 		from("direct-vm:updateNLPCommunication").routeId("direct-vm_updateNLPCommunication").log("Welcome to the NLP Chat Route").process(new Processor() {
 			
 			@Override
