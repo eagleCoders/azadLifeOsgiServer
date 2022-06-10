@@ -83,8 +83,7 @@ public class BusinessManagementRoutes  extends RouteBuilder {
 				exchange.getIn().removeHeader("AZADPAY_BusinessMasterBean");
 				exchange.getIn().setBody(bodyMap);
 			}
-		})
-		.wireTap("direct-vm:updateBusinessRegistrationToAdmin");
+		}).wireTap("direct-vm:updateBusinessRegistrationToAdmin");
 	}
 
 }
