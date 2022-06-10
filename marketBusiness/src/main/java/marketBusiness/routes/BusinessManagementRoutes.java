@@ -40,34 +40,51 @@ public class BusinessManagementRoutes  extends RouteBuilder {
 				exchange.getIn().setHeader("AZADPAY_BusinessMasterBean", bodyMap);
 				
 				
-				List<Map<String, String>> branchListMap =(List<Map<String, String>>) bodyMap.get("businessBranchesList");
+				List<Map<String, Object>> branchListMap =(List<Map<String, Object>>) bodyMap.get("businessBranchesList");
 				List<BusinessBranchesBean> businessBranchesList = new ArrayList<BusinessBranchesBean>();
 				bizMasterBean.setBusinessBranches(businessBranchesList);
 				bizMasterBean.setBusinessName(businessName);
 				bizMasterBean.setBusinessType(BusinessType.valueOf(businessType));
 				bizMasterBean.setRegistrationType(RegistrationType.valueOf(registrationType));
+				bizMasterBean.setBusinessBanner(businessImage);
+				
 				branchListMap.stream().forEach(e->{
 					BusinessBranchesBean businessBranchesBean = new BusinessBranchesBean();
 					
-					String brnachPosition = (String) e.get("branchPosition");
-					String isHQBranch = (String) e.get("hqBranch");
+					Integer brnachPosition = (Integer) e.get("branchPosition");
+					Boolean isHQBranch = (Boolean) e.get("hqBranch");
 					String branchName = (String) e.get("branchName");
 					String branchAddress = (String) e.get("branchAddress");
-					String branchLogitude = (String) e.get("longitutde");
-					String branchLatitude = (String) e.get("latitude");
+					Integer branchLogitude = (Integer) e.get("longitutde");
+					Integer branchLatitude = (Integer) e.get("latitude");
 					
-					businessBranchesBean.setBranchPosition(Integer.valueOf(brnachPosition));
-					businessBranchesBean.setPrimaryBranch(Boolean.valueOf(isHQBranch));
+					businessBranchesBean.setBranchPosition(brnachPosition);
+					businessBranchesBean.setPrimaryBranch(isHQBranch);
 					businessBranchesBean.setBranchAdress(branchAddress);
 					businessBranchesBean.setBranchName(branchName);
 					businessBranchesBean.setBusinessLatitude(Long.valueOf(branchLatitude));
 					businessBranchesBean.setBusinessLongitude(Long.valueOf(branchLogitude));
 					
 					businessBranchesList.add(businessBranchesBean);
+					
+					exchange.getIn().setBody(bizMasterBean);
+					
 				});
 				
 			}
-		}).transacted().toD("jpa://" + BusinessMasterBean.class.getName() + "?usePersist=true").to("direct-vm:updateBusinessRegistrationToAdmin");
+		}).transacted().toD("jpa://" + BusinessMasterBean.class.getName() + "?usePersist=true")
+		.process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				// TODO Auto-generated method stub
+				Map<String, Object> bodyMap = (Map<String, Object>) exchange.getIn().getHeader("AZADPAY_BusinessMasterBean");
+				System.out.println("[TalkToMeRoutes] : AZADPAY_BusinessMasterBean : "+bodyMap);
+				exchange.getIn().removeHeader("AZADPAY_BusinessMasterBean");
+				exchange.getIn().setBody(bodyMap);
+			}
+		})
+		.wireTap("direct-vm:updateBusinessRegistrationToAdmin");
 	}
 
 }

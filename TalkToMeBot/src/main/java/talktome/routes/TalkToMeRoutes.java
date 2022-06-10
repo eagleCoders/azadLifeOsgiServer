@@ -152,7 +152,8 @@ public class TalkToMeRoutes extends RouteBuilder{
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				Map<String, Object> bodyMap = (Map<String, Object>) exchange.getIn().getHeader("AZADPAY_BusinessMasterBean");
+				Map<String, Object> bodyMap = (Map<String, Object>)exchange.getIn().getBody();
+				System.out.println("[TalkToMeRoutes] : updateBusinessRegistrationToAdmin : "+bodyMap);
 				
 			}
 		});
