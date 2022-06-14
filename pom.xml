@@ -16,6 +16,7 @@
 		<module>infrastructure</module>
 		<module>TalkToMeBot</module>
 		<module>marketBusiness</module>
+		<module>inventory</module>
 	</modules>
 	
 	<dependencyManagement>
