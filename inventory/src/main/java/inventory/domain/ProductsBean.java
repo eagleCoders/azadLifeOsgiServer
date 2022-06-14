@@ -3,13 +3,20 @@
  */
 package inventory.domain;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,7 +28,7 @@ import javax.persistence.Table;
 @Table(name="products")
 @SequenceGenerator(name="azd_products", sequenceName="azd_productsMasterSeq")
 
-public class ProductsBean {
+public class ProductsBean implements Serializable{
 
 	@Id
 	@Column(name="id")
@@ -45,6 +52,14 @@ public class ProductsBean {
 	
 	@Column(name="content", length = 10485760)
 	private String contnet;
+	
+	@OneToMany(targetEntity = ProductMetaBean.class)
+	@JoinColumn(name = "productId")
+	private List<ProductMetaBean> productMetaList;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "product_category")
+	private List<CategoryBean> productCategoryList;
 
 	/**
 	 * @return the productId

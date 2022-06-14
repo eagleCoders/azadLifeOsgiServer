@@ -12,7 +12,10 @@
 		<!-- osgi.jndi.service.name <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> 
 			<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> 
 			<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> -->
-
+		<class>inventory.domain.ProductsBean</class>
+		<class>inventory.domain.ProductMetaBean</class>
+		<class>inventory.domain.CategoryBean</class>
+		
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
