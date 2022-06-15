@@ -45,7 +45,7 @@ public class ProductsBean implements Serializable{
 	@Column(name="type", nullable = false)
 	private Integer type = 0;
 	
-	@Column(name="createdAt", nullable = false)
+	@Column(name="createdAt", nullable = true)
 	private Date createDt;
 	
 	@Column(name="updatedAt")

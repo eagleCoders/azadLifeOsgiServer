@@ -11,7 +11,7 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name="order")
+@Table(name="orders")
 @SequenceGenerator(name="azd_order", sequenceName="azd_orderSeq")
 public class Order implements Serializable {
 
@@ -65,9 +65,9 @@ public class Order implements Serializable {
 	@Column(name="content", length = 10485760)
 	private String content;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "orderId", referencedColumnName = "id")
-	private List<OrderAddress> orderAddressList;
+//	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@JoinColumn(name = "orderId", referencedColumnName = "id")
+//	private List<OrderAddress> orderAddressList;
 	
 	@OneToMany(targetEntity = ProductMetaBean.class)
 	@JoinColumn(name = "orderId", referencedColumnName = "id")
@@ -287,5 +287,20 @@ public class Order implements Serializable {
 		this.content = content;
 	}
 
+	/**
+	 * @return the orederedItemsList
+	 */
+	public List<ItemBean> getOrederedItemsList() {
+		return orederedItemsList;
+	}
+
+	/**
+	 * @param orederedItemsList the orederedItemsList to set
+	 */
+	public void setOrederedItemsList(List<ItemBean> orederedItemsList) {
+		this.orederedItemsList = orederedItemsList;
+	}
+
+	
 	
 }

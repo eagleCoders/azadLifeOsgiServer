@@ -60,7 +60,7 @@
 
 						<!-- <Import-Package>*,org.apache.camel.osgi</Import-Package> -->
 						<!-- <Export-Package>registrations.domain</Export-Package> -->
-						<Export-Package>accounts.gl.domain</Export-Package>
+						<Export-Package>inventory.domain</Export-Package>
 
 					</instructions>
 				</configuration>

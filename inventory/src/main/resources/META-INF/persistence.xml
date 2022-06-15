@@ -20,6 +20,7 @@
 		<class>inventory.domain.OrderAddress</class>
 		<class>inventory.domain.ItemBean</class>
 		<class>inventory.domain.OrderItemBean</class>
+		<class>inventory.domain.TransactionBeans</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
