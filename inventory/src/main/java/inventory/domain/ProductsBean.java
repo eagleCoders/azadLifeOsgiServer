@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -57,8 +58,8 @@ public class ProductsBean implements Serializable{
 	@JoinColumn(name = "productId")
 	private List<ProductMetaBean> productMetaList;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "product_category")
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "product_category", joinColumns = { @JoinColumn(name="productId", referencedColumnName = "id")},inverseJoinColumns = {@JoinColumn(name="categoryId", referencedColumnName = "id")})
 	private List<CategoryBean> productCategoryList;
 
 	/**

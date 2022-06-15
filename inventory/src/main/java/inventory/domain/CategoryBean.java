@@ -23,6 +23,7 @@ import javax.persistence.Table;
 public class CategoryBean implements Serializable {
 
 	@Id
+	@Column(name="id")
 	private Integer categoryId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
