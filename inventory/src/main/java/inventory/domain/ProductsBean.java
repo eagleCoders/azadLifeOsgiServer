@@ -55,12 +55,17 @@ public class ProductsBean implements Serializable{
 	private String contnet;
 	
 	@OneToMany(targetEntity = ProductMetaBean.class)
-	@JoinColumn(name = "productId")
+	@JoinColumn(name = "productId", referencedColumnName = "id")
 	private List<ProductMetaBean> productMetaList;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "product_category", joinColumns = { @JoinColumn(name="productId", referencedColumnName = "id")},inverseJoinColumns = {@JoinColumn(name="categoryId", referencedColumnName = "id")})
 	private List<CategoryBean> productCategoryList;
+	
+	
+	@OneToMany(targetEntity = ProductMetaBean.class)
+	@JoinColumn(name = "productId", referencedColumnName = "id")
+	private List<ItemBean> productItemsList;
 
 	/**
 	 * @return the productId
@@ -158,6 +163,48 @@ public class ProductsBean implements Serializable{
 	 */
 	public void setContnet(String contnet) {
 		this.contnet = contnet;
+	}
+
+	/**
+	 * @return the productMetaList
+	 */
+	public List<ProductMetaBean> getProductMetaList() {
+		return productMetaList;
+	}
+
+	/**
+	 * @param productMetaList the productMetaList to set
+	 */
+	public void setProductMetaList(List<ProductMetaBean> productMetaList) {
+		this.productMetaList = productMetaList;
+	}
+
+	/**
+	 * @return the productCategoryList
+	 */
+	public List<CategoryBean> getProductCategoryList() {
+		return productCategoryList;
+	}
+
+	/**
+	 * @param productCategoryList the productCategoryList to set
+	 */
+	public void setProductCategoryList(List<CategoryBean> productCategoryList) {
+		this.productCategoryList = productCategoryList;
+	}
+
+	/**
+	 * @return the productItemsList
+	 */
+	public List<ItemBean> getProductItemsList() {
+		return productItemsList;
+	}
+
+	/**
+	 * @param productItemsList the productItemsList to set
+	 */
+	public void setProductItemsList(List<ItemBean> productItemsList) {
+		this.productItemsList = productItemsList;
 	}
 	
 	

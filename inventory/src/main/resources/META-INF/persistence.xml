@@ -16,6 +16,10 @@
 		<class>inventory.domain.ProductMetaBean</class>
 		<class>inventory.domain.CategoryBean</class>
 		<class>inventory.domain.BrandBean</class>
+		<class>inventory.domain.Order</class>
+		<class>inventory.domain.OrderAddress</class>
+		<class>inventory.domain.ItemBean</class>
+		<class>inventory.domain.OrderItemBean</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
