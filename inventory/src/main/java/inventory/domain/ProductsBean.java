@@ -4,6 +4,10 @@
 package inventory.domain;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -31,18 +35,25 @@ import javax.persistence.Table;
 
 public class ProductsBean implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "azd_products")
 	private Integer productId;
 	
+	//Title of the Product
 	@Column(name="title", nullable = false)
 	private String productTitle;
 	
 	@Column(name="summary", nullable = false)
 	private String summary;
 
-	@Column(name="type", nullable = false)
+	//Products Types
+	@Column(name="type")
 	private Integer type = 0;
 	
 	@Column(name="createdAt", nullable = true)
@@ -51,6 +62,7 @@ public class ProductsBean implements Serializable{
 	@Column(name="updatedAt")
 	private Date updateDt;
 	
+	//Further Details of the Product
 	@Column(name="content", length = 10485760)
 	private String contnet;
 	
@@ -66,6 +78,11 @@ public class ProductsBean implements Serializable{
 	@OneToMany(targetEntity = ProductMetaBean.class)
 	@JoinColumn(name = "productId", referencedColumnName = "id")
 	private List<ItemBean> productItemsList;
+	
+	public ProductsBean() {
+		LocalDate localDate = LocalDate.now();
+		createDt = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
 
 	/**
 	 * @return the productId

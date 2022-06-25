@@ -188,10 +188,41 @@ public class TalkToMeRoutes extends RouteBuilder{
 //				messageMap.put("category", replymsg.get("category"));
 //				messageMap.put("ttl", "7000");
 
-				replymsg.put("messaegType", "WELCOME");
-				replymsg.put("messaeg", reply);
-//				replymsg.put("category", replymsg.get("category"));
-				replymsg.put("ttl", "7000");
+				String category = replymsg.get("category");
+				if(category.equals("greeting") || category.equals("seller") || category.equals("buyer")) {
+					replymsg.put("messaegType", "WELCOME");
+					replymsg.put("messaeg", reply);
+//					replymsg.put("category", replymsg.get("category"));
+					replymsg.put("ttl", "7000");
+					
+				}
+				if(category.equals("help_femalesexual") || category.equals("help_malesexual") || category.equals("doctor_search")) {
+					replymsg.put("messaegType", "HEALTHCARE");
+					replymsg.put("messaeg", reply);
+//					replymsg.put("category", replymsg.get("category"));
+					replymsg.put("deleteable", "false");
+					replymsg.put("ttl", "16000");
+				}
+				
+				if(category.equals("payments")) {
+					replymsg.put("messaegType", "PAYMENT");
+					replymsg.put("messaeg", reply);
+//					replymsg.put("category", replymsg.get("category"));
+					replymsg.put("deleteable", "false");
+					replymsg.put("ttl", "16000");
+					
+				}
+				if(category.equals("appointment")) {
+					replymsg.put("messaegType", "APPOINTMENT");
+					replymsg.put("messaeg", reply);
+//					replymsg.put("category", replymsg.get("category"));
+					replymsg.put("ttl", "20000");
+					
+				}
+//				replymsg.put("messaegType", "WELCOME");
+//				replymsg.put("messaeg", reply);
+////				replymsg.put("category", replymsg.get("category"));
+//				replymsg.put("ttl", "7000");
 				
 
 				RouteBuilder.addRoutes(getContext(),  rb->{
