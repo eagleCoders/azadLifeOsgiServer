@@ -1,3 +1,11 @@
-greeting hi. welcome. salaam. how are you.
-seller baichna. selling. want to see. any buyer around. seller. sell fruits. sell wheat. sell vegitables.
-buyer kharidna. want to buy. buying. seller around. buy rice. buy wheat. buy fruits.
+registration register me. need to get registered. register myself.
+seller baichna. selling. want to see. any buyer around. seller. sell fruits. sell wheat.
+buyer kharidna. want to buy . buying . seller around . buy rice . buy wheat . buy fruits .
+help  help . help me . help please . help plz ? I am in danger ? danger . Fire. fire . accident . I got accident .
+appointment	  appointment plz . Please make an appointment . arrange me a visit ? I need appointment ?  I need to visit ? Need Doctor ? Can I see any doctor ? I need visit ? I want some visits ? Let me have a visit. I want urgent help. 
+help_femalesexual  Information regarding family planning . Vagina has issues . Vagina female problem . Information about mensis . information regarding periods . information regarding mensturation . I need midwife . I need obgyne . irregular mensis . I have irregular mensis . I am pregnant . pregnant . abortion . I need abortion . I got abortion . I am getting an abortion . I need family planning . I want to know midwife . mid wife. sex help . sexual help . I want to see obgyne . periods . I have periods . issues with periods . menstruation . I have menstruation . I have irregular menstruation . mensis . I got mensis . information about mensis . help me for sexual problems . help me for period pain . help me for mensis pain . help me for menstruation . my periods has issues . my periods are not regular .  vagina bleeds alot . Vagina spear tests . 
+help_malesexual		Information about penis size . erticle dysfunction . my dick is not hard . Erictile Penis . Erect Dick . my dick problem . Hard Dick . Dick Pain . Penis Pain . Testicle Pain .testicles pains . different sizes of testicles . pre-ejaculation . preejaculation . fast ejaculation . too much masturbation . masturbation . wet dreams . low arousal .
+doctor_search Find me a Doctor . Need to visit doctor, help me to find a doctor . I am in pain need doctor . I am depressed .  depressed . I want to die. death . killing. kill my self. I am alone . I am lonely . I am suffering with depression today .
+payments  I want to pay 100 USD . payments for the School . Bill Payments for the Utilities . School of DPS Payments . school payments . I want to pay my university fee .
+greeting hi . welcome . salaam . how are you .
+accounts_open Open my account .  Can I open account for myself . wanna open the account . want to open my account . Bank account to open . Information about Accounts . Second account for the bank .

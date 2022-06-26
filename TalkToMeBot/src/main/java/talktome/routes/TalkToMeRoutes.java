@@ -219,11 +219,19 @@ public class TalkToMeRoutes extends RouteBuilder{
 					replymsg.put("ttl", "20000");
 					
 				}
-//				replymsg.put("messaegType", "WELCOME");
-//				replymsg.put("messaeg", reply);
-////				replymsg.put("category", replymsg.get("category"));
-//				replymsg.put("ttl", "7000");
-				
+				if(category.equals("accounts_open")) {
+					replymsg.put("messaegType", "ACCOUNTS");
+					replymsg.put("messaeg", reply);
+					replymsg.put("deleteable", "false");
+					replymsg.put("ttl", "20000");
+				}
+				if(category.equals("registration")) {
+					replymsg.put("messaegType", "REGISTRATION");
+					replymsg.put("messaeg", reply);
+					replymsg.put("deleteable", "false");
+					replymsg.put("ttl", "20000");
+					
+				}
 
 				RouteBuilder.addRoutes(getContext(),  rb->{
 					rb.from("timer://simpleOfferCountDownTimer?delay=1s&repeatCount=1").routeId(routeId).process(new Processor() {
