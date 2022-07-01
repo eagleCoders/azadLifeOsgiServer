@@ -183,10 +183,6 @@ public class TalkToMeRoutes extends RouteBuilder{
 				String routeId = "createRouteQueueId"+host;
 				
 				Map<String, Object> messageMap = new HashMap<String, Object>();
-//				messageMap.put("messaegType", "WELCOME");
-//				messageMap.put("messaeg", reply);
-//				messageMap.put("category", replymsg.get("category"));
-//				messageMap.put("ttl", "7000");
 
 				String category = replymsg.get("category");
 				if(category.equals("greeting") || category.equals("seller") || category.equals("buyer")) {
@@ -196,7 +192,7 @@ public class TalkToMeRoutes extends RouteBuilder{
 					replymsg.put("ttl", "7000");
 					
 				}
-				if(category.equals("help_femalesexual") || category.equals("help_malesexual") || category.equals("doctor_search")) {
+				if(category.equals("help_femalesexual") || category.equals("help_malesexual") || category.equals("doctor_search") || category.equals("self_triage") || category.equals("self_psyhc")) {
 					replymsg.put("messaegType", "HEALTHCARE");
 					replymsg.put("messaeg", reply);
 //					replymsg.put("category", replymsg.get("category"));
