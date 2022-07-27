@@ -75,15 +75,6 @@ public class BaseRoutes extends RouteBuilder {
 			}
 		}).to("jdbc:azadPDS").marshal(gsonDataFormat).convertBodyTo(String.class);;
 		
-//		from("timer:stream?repeatCount=3").routeId("timer_buzzTelegram").process(new Processor() {
-//
-//			@Override
-//			public void process(Exchange exchange) throws Exception {
-//				System.out.println("Testing the DS");
-//				exchange.getIn().setBody("Testing Telegram Bot");
-//			}
-//		});
-
 	}
 
 }

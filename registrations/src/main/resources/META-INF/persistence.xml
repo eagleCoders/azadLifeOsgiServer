@@ -14,6 +14,8 @@
 			<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=azadDS)</jta-data-source> -->
 		<class>registrations.domain.UserRegistrationBean</class>
 		<class>registrations.domain.UserTypeChangeBean</class>
+		<class>registrations.domain.UserLoggedInLocation</class>
+		<class>registrations.domain.UserLocationBean</class>
 
 
 		<properties>
