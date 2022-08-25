@@ -36,6 +36,7 @@ public class BaseRoutes extends RouteBuilder {
 		.post("/registration").to("direct-vm:proceedRegistration")
 		.post("/updateUserType").to("direct-vm:updateUserType")
 		.post("/updateNLPComm").to("direct-vm:updateNLPCommunication")
+		.post("/updateUserLoggedInLocation").to("direct-vm:updateLoggedInLocation")
 		
 //		.post("/updateAsMerchandiser").to("direct-vm:updateMerchandiser")
 //		.post("/updateRetailer").to("direct-vm:updateRetailer")

@@ -268,6 +268,7 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 //			}
 //		})
 //		.to("direct:userTypeSelectionQuery");
+		
 
 		from("direct-vm:updateUserType").routeId("direct-vm:updateUserType")
 				.log("Welcome to the Merchandiser update route").process(new Processor() {
@@ -382,4 +383,5 @@ public class RegistrationProcessRoutes extends RouteBuilder {
 
 	}
 
+	
 }

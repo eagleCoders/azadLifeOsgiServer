@@ -30,10 +30,10 @@ public class UserLocationBean  implements Serializable{
 	private String globalId;
 
 	@Column(name="perm_lat")
-	private Long latitude;
+	private Double latitude;
 	
 	@Column(name="perm_lang")
-	private Long longitude;
+	private Double longitude;
 	
 	@Column(name="perm_city")
 	private String city;
@@ -78,28 +78,28 @@ public class UserLocationBean  implements Serializable{
 	/**
 	 * @return the latitude
 	 */
-	public Long getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
 	/**
 	 * @param latitude the latitude to set
 	 */
-	public void setLatitude(Long latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
 	/**
 	 * @return the longitude
 	 */
-	public Long getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
 	/**
 	 * @param longitude the longitude to set
 	 */
-	public void setLongitude(Long longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 

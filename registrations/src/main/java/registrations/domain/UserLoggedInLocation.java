@@ -5,10 +5,14 @@ package registrations.domain;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,18 +29,25 @@ public class UserLoggedInLocation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(generator="azadPaymentuserLoggedInUser", strategy=GenerationType.AUTO)
+	@SequenceGenerator(name="azadPaymentuserLoggedInUser", sequenceName="ap_userloggedInSeq")
 	private Long id;
 	
 	@Column(name="globalid", length=10485760)
 	private String globalId;
 
 	@Column(name="login_lat")
-	private Long latitude;
+	private Double latitude;
 	
 	@Column(name="login_lang")
-	private Long longitude;
+	private Double longitude;
 
 	private Timestamp longedInTime;
+	
+	private LocalDate loginDate;
+	
+	private LocalDate logoutDate;
+
 
 	/**
 	 * @return the id
@@ -69,28 +80,28 @@ public class UserLoggedInLocation implements Serializable {
 	/**
 	 * @return the latitude
 	 */
-	public Long getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
 	/**
 	 * @param latitude the latitude to set
 	 */
-	public void setLatitude(Long latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
 	/**
 	 * @return the longitude
 	 */
-	public Long getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
 	/**
 	 * @param longitude the longitude to set
 	 */
-	public void setLongitude(Long longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -106,6 +117,34 @@ public class UserLoggedInLocation implements Serializable {
 	 */
 	public void setLongedInTime(Timestamp longedInTime) {
 		this.longedInTime = longedInTime;
+	}
+
+	/**
+	 * @return the loginDate
+	 */
+	public LocalDate getLoginDate() {
+		return loginDate;
+	}
+
+	/**
+	 * @param loginDate the loginDate to set
+	 */
+	public void setLoginDate(LocalDate loginDate) {
+		this.loginDate = loginDate;
+	}
+
+	/**
+	 * @return the logoutDate
+	 */
+	public LocalDate getLogoutDate() {
+		return logoutDate;
+	}
+
+	/**
+	 * @param logoutDate the logoutDate to set
+	 */
+	public void setLogoutDate(LocalDate logoutDate) {
+		this.logoutDate = logoutDate;
 	}
 	
 	
