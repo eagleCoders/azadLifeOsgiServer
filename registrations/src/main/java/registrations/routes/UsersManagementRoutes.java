@@ -48,6 +48,13 @@ public class UsersManagementRoutes extends RouteBuilder {
 			}
 		}).marshal().json(JsonLibrary.Gson).convertBodyTo(String.class);
 		
+		from("direct-vm:updateLoggedOutocation").routeId("direct-vm_updateLoggedOutocation").log("LoggedOut Updates").process(new Processor() {
+			
+			@Override
+			public void process(Exchange exchange) throws Exception {
+				System.out.println("==========> data from the client : "+exchange.getIn().getBody());
+			}
+		});
 		
 		from("direct-vm:updateLoggedInLocation").routeId("direct-vm_updateLoggedInLocation").log("LoggedInUserLocation Updates")
 		.to("direct:loadCurrentUserDetails").process(new Processor() {
